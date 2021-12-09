@@ -150,8 +150,8 @@ Nanobody/Sybody",H11-H4,FFF,,3.31,Yes,10.1038/s41594-020-0469-6
 7DX4,The structure of FC08 Fab-hA.CE2-RBD complex,4/21/2021,Antibody,FC08,,7DX4_1,3.6,No,
 7DZX,Spike protein from SARS-CoV2 with Fab fragment of enhancing antibody 8D2,6/2/2021,Antibody,8D2,,7DZX_1,3.53,No,10.1016/j.cell.2021.05.032
 7DZY,Spike protein from SARS-CoV2 with Fab fragment of enhancing antibody 2490,6/2/2021,Antibody,2490,,7DZY_1;7DZY_2;7DZY_3,3.6,No,10.1016/j.cell.2021.05.032
-7.00E+23,SARS-CoV-2 spike in complex with the CA521 neutralizing antibody Fab (focused refinement on Fab-RBD),5/5/2021,Antibody,CA521,,,3.3,No,10.1038/s42003-021-02029-w
-7.00E+39,SARS-CoV-2 spike in complex with the Ab4 neutralizing antibody (State 3),9/1/2021,Antibody,Ab4,,,3.7,No,10.1038/s41421-021-00292-z
+7E23,SARS-CoV-2 spike in complex with the CA521 neutralizing antibody Fab (focused refinement on Fab-RBD),5/5/2021,Antibody,CA521,,,3.3,No,10.1038/s42003-021-02029-w
+7E39,SARS-CoV-2 spike in complex with the Ab4 neutralizing antibody (State 3),9/1/2021,Antibody,Ab4,,,3.7,No,10.1038/s41421-021-00292-z
 7E3B,SARS-Cov-2 spike in complex with the Ab5 neutralizing antibody (focused refinement on Fab-RBD),9/1/2021,Antibody,Ab5,,7E3B_1,4.2,No,10.1038/s41421-021-00292-z
 7E3C,SARS-CoV-2 spike in complex with the Ab1 neutralizing antibody (focused refinement on Fab-RBD),9/1/2021,Antibody,Ab1,,7E3C_1,4.2,No,10.1038/s41421-021-00292-z
 7E3K,Ultrapotent SARS-CoV-2 neutralizing antibodies with protective efficacy against newly emerged mutational variants,9/15/2021,Antibody,13G9,,7E3K_1;7E3K_2;7E3K_3,3.9,No,
@@ -168,13 +168,11 @@ Nanobody/Sybody",H11-H4,FFF,,3.31,Yes,10.1038/s41594-020-0469-6
 7E5Y,Molecular basis for neutralizing antibody 2B11 targeting SARS-CoV-2 RBD,6/23/2021,Antibody,2B11,,7E5Y_1;7E5Y_2,3.59,No,
 7E7X,SARS-CoV-2 Spike Protein N terminal domain in Complex with N11 Fab,6/9/2021,Antibody,N11,,7E7X_1;7E7X_2,2.78,No,10.1038/s41422-021-00514-9
 7E7Y,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-623 Fab,6/9/2021,Antibody,BD-623,,7E7Y_1;7E7Y_2,2.41,No,10.1038/s41422-021-00514-9
-7.00E+86,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-508 Fab,6/9/2021,Antibody,BD-508,,,2.9,No,10.1038/s41422-021-00514-9
-7.00E+88,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-515 Fab,6/9/2021,Antibody,BD-515,,,3.14,No,10.1038/s41422-021-00514-9
-7BEN,Crystal structure of the receptor binding domain of SARS-CoV-2 Spike glycoprotein in a ternary complex with COVOX-253 and COVOX-75 Fabs,3/3/2021,Antibody,COVOX-253,COVOX-75,,,No,
+7E86,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-508 Fab,6/9/2021,Antibody,BD-508,,,2.9,No,10.1038/s41422-021-00514-9
+7E88,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-515 Fab,6/9/2021,Antibody,BD-515,,,3.14,No,10.1038/s41422-021-00514-9
 7E8C,SARS-CoV-2 S-6P in complex with 9 Fabs,6/9/2021,Antibody,604,"D,E,N,O,P,Q",7E8C_3;7E8C_5;7E8C_7,3.16,Yes,10.1038/s41422-021-00514-9
-7ND9,EM structure of SARS-CoV-2 Spike glycoprotein (one RBD up) in complex with COVOX-253H55L Fab,3/3/2021,Antibody,COVOX-253H55L,,7ND9_1,,No,
-7NDA,EM structure of SARS-CoV-2 Spike glycoprotein (all RBD down) in complex with COVOX-253H55L Fab,3/3/2021,Antibody,COVOX-253H55L,,7NDA_1,,,
-7BEO,Crystal structure of the receptor binding domain of SARS-CoV-2 Spike glycoprotein in a ternary complex with COVOX-253H55L and COVOX-75 Fabs,3/3/2021,Antibody,COVOX-253H55L,COVOX-75,,,,
+7ND9,EM structure of SARS-CoV-2 Spike glycoprotein (one RBD up) in complex with COVOX-253H55L Fab,3/3/2021,Antibody,COVOX-253H55L,,7ND9_1,2.8,No,
+7NDA,EM structure of SARS-CoV-2 Spike glycoprotein (all RBD down) in complex with COVOX-253H55L Fab,3/3/2021,Antibody,COVOX-253H55L,,7NDA_1,3.3,No,
 7E8C,SARS-CoV-2 S-6P in complex with 9 Fabs,6/9/2021,Antibody,N9,"H,L,S,T,U,V",7E8C_2;7E8C_6;7E8C_9,3.16,Yes,10.1038/s41422-021-00514-9
 7E8C,SARS-CoV-2 S-6P in complex with 9 Fabs,6/9/2021,Antibody,368-2,"a,I,J,K,M,Z",7E8C_1;7E8C_4;7E8C_8,3.16,Yes,10.1038/s41422-021-00514-9
 7E8F,SARS-CoV-2 NTD in complex with N9 Fab,6/9/2021,Antibody,N9,,7E8F_1;7E8F_2;7E8F_3,3.18,No,10.1038/s41422-021-00514-9
