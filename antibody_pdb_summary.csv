@@ -245,9 +245,9 @@ ID,Class of Spike-Binding Protein,Spike-Binding Protein,Chains (If Cocktail),Mod
 7KN5,Nanobody/Sybody,VHH E,"C,D",,1.87,Crystal structure of SARS-CoV-2 receptor binding domain complexed with nanobodies VHH E and U,2021-01-20,10.1126/science.abe6230
 7KN5,Nanobody/Sybody,VHH U,"E,F",,1.87,Crystal structure of SARS-CoV-2 receptor binding domain complexed with nanobodies VHH E and U,2021-01-20,10.1126/science.abe6230
 7KN6,Antibody,CC12.3,"H,L",7KN6_1,2.55,Crystal structure of SARS-CoV-2 receptor binding domain complexed with nanobody VHH V and antibody Fab CC12.3,2021-01-20,10.1126/science.abe6230
-7KN6,Nanobody,VHH V,C,7KN6_1,2.55,Crystal structure of SARS-CoV-2 receptor binding domain complexed with nanobody VHH V and antibody Fab CC12.3,2021-01-20,10.1126/science.abe6230
+7KN6,Nanobody/Sybody,VHH V,C,7KN6_1,2.55,Crystal structure of SARS-CoV-2 receptor binding domain complexed with nanobody VHH V and antibody Fab CC12.3,2021-01-20,10.1126/science.abe6230
 7KN7,Antibody,CC12.3,"H,L",7KN7_1,2.73,Crystal structure of SARS-CoV-2 receptor binding domain complexed with nanobody VHH W and antibody Fab CC12.3,2021-01-20,10.1126/science.abe6230
-7KN7,Nanobody,VHH W,B,7KN7_1,2.73,Crystal structure of SARS-CoV-2 receptor binding domain complexed with nanobody VHH W and antibody Fab CC12.3,2021-01-20,10.1126/science.abe6230
+7KN7,Nanobody/Sybody,VHH W,B,7KN7_1,2.73,Crystal structure of SARS-CoV-2 receptor binding domain complexed with nanobody VHH W and antibody Fab CC12.3,2021-01-20,10.1126/science.abe6230
 7KQE,Antibody,3D11,,7KQE_1;7KQE_2;7KQE_3,2.88,SARS-CoV-2 spike glycoprotein:Fab 3D11 complex,2021-05-26,10.1016/j.cell.2021.04.033
 7KS9,Antibody,910-30,,7KS9_1,4.75,Cryo-EM structure of prefusion SARS-CoV-2 spike glycoprotein in complex with 910-30 Fab,2021-02-10,10.1101/2020.12.31.424987
 7KSG,Nanobody/Sybody,VHH E,,,3.33,SARS-CoV-2 spike in complex with nanobodies E,2021-01-20,10.1126/science.abe6230
