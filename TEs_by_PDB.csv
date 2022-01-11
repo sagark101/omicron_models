@@ -1,4 +1,4 @@
-ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If Cocktail),Model Name,Resolution,Title,Released,DOI,Notes
+ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If Cocktail),Complex Name,Resolution,Title,Released,DOI,Notes
 6W41,Antibody,CR3022,4,,6W41_1,3.084,Crystal structure of SARS-CoV-2 receptor binding domain in complex with human antibody CR3022,3/25/2020,10.1126/science.abb7269,
 6WPS,Antibody,S309,3,,6WPS_1;6WPS_2;6WPS_3,"3.1, 3.1",Structure of the SARS-CoV-2 spike glycoprotein in complex with the S309 neutralizing antibody Fab fragment,5/27/2020,10.1038/s41586-020-2349-y,
 6WPT,Antibody,S309,3,,6WPT_1;6WPT_2,"3.7, 3.7",Structure of the SARS-CoV-2 spike glycoprotein in complex with the S309 neutralizing antibody Fab fragment (open state),5/27/2020,10.1038/s41586-020-2349-y,
@@ -13,7 +13,7 @@ ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If 
 6XDG,Antibody,REGN10933,1,"B,D",6XDG_1,3.9,Complex of SARS-CoV-2 receptor binding domain with the Fab fragments of two neutralizing antibodies,6/24/2020,10.1126/science.abd0827,class disagreement (2)
 6XDG,Antibody,REGN10987,3,"A,C",6XDG_2,3.9,Complex of SARS-CoV-2 receptor binding domain with the Fab fragments of two neutralizing antibodies,6/24/2020,10.1126/science.abd0827,
 6XE1,Antibody,CV30,1,,6XE1_1,2.75,"Structure of SARS-CoV-2 spike protein receptor binding domain in complex with a potent neutralizing antibody, CV30 Fab",7/1/2020,10.1101/2020.06.12.148692,
-6XEY,Antibody,2-4,,,6XEY_1;6XEY_2;6XEY_3,3.25,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab 2-4,7/22/2020,10.1038/s41586-020-2571-7,
+6XEY,Antibody,4-Feb,,,6XEY_1;6XEY_2;6XEY_3,3.25,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab 2-4,7/22/2020,10.1038/s41586-020-2571-7,
 6XKP,Antibody,CV07-270,3,,6XKP_1;6XKP_2,2.72,Crystal structure of SARS-CoV-2 receptor binding domain in complex with neutralizing antibody CV07-270,10/14/2020,10.1016/j.cell.2020.09.049,
 6XKQ,Antibody,CV07-250,2,,6XKQ_1,2.55,Crystal structure of SARS-CoV-2 receptor binding domain in complex with neutralizing antibody CV07-250,10/14/2020,10.1016/j.cell.2020.09.049,
 6YLA,Antibody,CR3022,4,,6YLA_1;6YLA_2,2.42,Crystal structure of the SARS-CoV-2 receptor binding domain in complex with CR3022 Fab,4/15/2020,10.1016/j.chom.2020.06.010,
@@ -142,8 +142,8 @@ ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If 
 7DX4,Antibody,FC08,3,,7DX4_1,3.6,The structure of FC08 Fab-hA.CE2-RBD complex,4/21/2021,,
 7DZX,Antibody,8D2,,,7DZX_1,3.53,Spike protein from SARS-CoV2 with Fab fragment of enhancing antibody 8D2,6/2/2021,10.1016/j.cell.2021.05.032,
 7DZY,Antibody,2490,,,7DZY_1;7DZY_2;7DZY_3,3.6,Spike protein from SARS-CoV2 with Fab fragment of enhancing antibody 2490,6/2/2021,10.1016/j.cell.2021.05.032,
-7E23,Antibody,CA521,2,,7E23_1,3.3,SARS-CoV-2 spike in complex with the CA521 neutralizing antibody Fab (focused refinement on Fab-RBD),5/5/2021,10.1038/s42003-021-02029-w,
-7E39,Antibody,Ab4,,,7E39_1,3.7,SARS-CoV-2 spike in complex with the Ab4 neutralizing antibody (State 3),9/1/2021,10.1038/s41421-021-00292-z,
+7.00E+23,Antibody,CA521,2,,7E23_1,3.3,SARS-CoV-2 spike in complex with the CA521 neutralizing antibody Fab (focused refinement on Fab-RBD),5/5/2021,10.1038/s42003-021-02029-w,
+7.00E+39,Antibody,Ab4,,,7E39_1,3.7,SARS-CoV-2 spike in complex with the Ab4 neutralizing antibody (State 3),9/1/2021,10.1038/s41421-021-00292-z,
 7E3B,Antibody,Ab5,,,7E3B_1,4.2,SARS-Cov-2 spike in complex with the Ab5 neutralizing antibody (focused refinement on Fab-RBD),9/1/2021,10.1038/s41421-021-00292-z,
 7E3C,Antibody,Ab1,,,7E3C_1,4.2,SARS-CoV-2 spike in complex with the Ab1 neutralizing antibody (focused refinement on Fab-RBD),9/1/2021,10.1038/s41421-021-00292-z,
 7E3K,Antibody,13G9,2,,7E3K_1;7E3K_2;7E3K_3,3.9,Ultrapotent SARS-CoV-2 neutralizing antibodies with protective efficacy against newly emerged mutational variants,9/15/2021,,
@@ -160,8 +160,8 @@ ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If 
 7E5Y,Antibody,2B11,1,,7E5Y_1;7E5Y_2,3.59,Molecular basis for neutralizing antibody 2B11 targeting SARS-CoV-2 RBD,6/23/2021,,
 7E7X,Antibody,N11,,,7E7X_1;7E7X_2,2.78,SARS-CoV-2 Spike Protein N terminal domain in Complex with N11 Fab,6/9/2021,10.1038/s41422-021-00514-9,
 7E7Y,Antibody,BD-623,2,,7E7Y_1;7E7Y_2,2.41,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-623 Fab,6/9/2021,10.1038/s41422-021-00514-9,
-7E86,Antibody,BD-508,,,7E86_1,2.9,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-508 Fab,6/9/2021,10.1038/s41422-021-00514-9,
-7E88,Antibody,BD-515,,,7E88_1;7E88_2;7E88_3;7E88_4,3.14,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-515 Fab,6/9/2021,10.1038/s41422-021-00514-9,
+7.00E+86,Antibody,BD-508,,,7E86_1,2.9,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-508 Fab,6/9/2021,10.1038/s41422-021-00514-9,
+7.00E+88,Antibody,BD-515,,,7E88_1;7E88_2;7E88_3;7E88_4,3.14,Crystal structure of the SARS-CoV-2 S RBD in complex with BD-515 Fab,6/9/2021,10.1038/s41422-021-00514-9,
 7E8C,Antibody,604,,"D,E,N,O,P,Q",7E8C_3;7E8C_5;7E8C_7,3.16,SARS-CoV-2 S-6P in complex with 9 Fabs,6/9/2021,10.1038/s41422-021-00514-9,Mutant Spike
 7E8C,Antibody,368-2,,"a,I,J,K,M,Z",7E8C_1;7E8C_4;7E8C_8,3.16,SARS-CoV-2 S-6P in complex with 9 Fabs,6/9/2021,10.1038/s41422-021-00514-9,Mutant Spike
 7E8C,Antibody,N9,,"H,L,S,T,U,V",7E8C_2;7E8C_6;7E8C_9,3.16,SARS-CoV-2 S-6P in complex with 9 Fabs,6/9/2021,10.1038/s41422-021-00514-9,Mutant Spike
@@ -260,15 +260,15 @@ ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If 
 7L09,Antibody,2G12,,,7L09_1,3.1,Cryo-EM structure of SARS-CoV-2 2P S ectodomain bound domain-swapped antibody 2G12 from masked 3D refinement,12/30/2020,10.1016/j.cell.2021.04.042,
 7L0N,Antibody,S304,4,"H,L,M,N",7L0N_2;7L0N_3,2.78,Circulating SARS-CoV-2 spike N439K variants maintain fitness while evading antibody-mediated immunity,2/17/2021,10.1016/j.cell.2021.01.037,Mutant Spike; ACE2 Included
 7L0N,Antibody,S309,3,"A,B,C,D",7L0N_1;7L0N_4,2.78,Circulating SARS-CoV-2 spike N439K variants maintain fitness while evading antibody-mediated immunity,2/17/2021,10.1016/j.cell.2021.01.037,
-7L2C,Antibody,2-15,,,7L2C_1;7L2C_2,3.65,Crystallographic structure of neutralizing antibody 2-51 in complex with SARS-CoV-2 spike N-terminal domain (NTD),2/10/2021,10.1016/j.chom.2021.03.005,
-7L2D,Antibody,1-87,,,7L2D_1,3.55,Cryo-EM structure of NTD-directed neutralizing antibody 1-87 in complex with prefusion SARS-CoV-2 spike glycoprotein,3/24/2021,10.1016/j.chom.2021.03.005,
-7L2E,Antibody,4-18,,,7L2E_1;7L2E_2;7L2E_3,2.97,Cryo-EM structure of NTD-directed neutralizing antibody 4-18 in complex with prefusion SARS-CoV-2 spike glycoprotein,3/24/2021,10.1016/j.chom.2021.03.005,
-7L2F,Antibody,5-24,,,7L2F_1;7L2F_2;7L2F_3,3.9,Cryo-EM structure of NTD-directed neutralizing antibody 5-24 in complex with prefusion SARS-CoV-2 spike glycoprotein,3/24/2021,10.1016/j.chom.2021.03.005,
+7L2C,Antibody,15-Feb,,,7L2C_1;7L2C_2,3.65,Crystallographic structure of neutralizing antibody 2-51 in complex with SARS-CoV-2 spike N-terminal domain (NTD),2/10/2021,10.1016/j.chom.2021.03.005,
+7L2D,Antibody,Jan-87,,,7L2D_1,3.55,Cryo-EM structure of NTD-directed neutralizing antibody 1-87 in complex with prefusion SARS-CoV-2 spike glycoprotein,3/24/2021,10.1016/j.chom.2021.03.005,
+7L2E,Antibody,18-Apr,,,7L2E_1;7L2E_2;7L2E_3,2.97,Cryo-EM structure of NTD-directed neutralizing antibody 4-18 in complex with prefusion SARS-CoV-2 spike glycoprotein,3/24/2021,10.1016/j.chom.2021.03.005,
+7L2F,Antibody,24-May,,,7L2F_1;7L2F_2;7L2F_3,3.9,Cryo-EM structure of NTD-directed neutralizing antibody 5-24 in complex with prefusion SARS-CoV-2 spike glycoprotein,3/24/2021,10.1016/j.chom.2021.03.005,
 7L3N,Antibody,LY-CoV555,2,,7L3N_1,3.27,SARS-CoV 2 Spike Protein bound to LY-CoV555,2/3/2021,10.1101/2020.09.30.318972,
-7L56,Antibody,2-43,,,7L56_1;7L56_2;7L56_3,3.6,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab 2-43,4/14/2021,10.1016/j.celrep.2021.108950,
-7L57,Antibody,2-15,,,7L57_1,5.87,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab 2-15,4/14/2021,10.1016/j.celrep.2021.108950,
+7L56,Antibody,Feb-43,,,7L56_1;7L56_2;7L56_3,3.6,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab 2-43,4/14/2021,10.1016/j.celrep.2021.108950,
+7L57,Antibody,15-Feb,,,7L57_1,5.87,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab 2-15,4/14/2021,10.1016/j.celrep.2021.108950,
 7L58,Antibody,H4,2,,7L58_1,5.07,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab H4,4/14/2021,10.1016/j.celrep.2021.108950,
-7L5B,Antibody,2-15,,,7L5B_1,3.18,Crystallographic structure of neutralizing antibody 2-15 in complex with SARS-CoV-2 spike receptor-binding Domain (RBD).,2/10/2021,10.1016/j.celrep.2021.108950,
+7L5B,Antibody,15-Feb,,,7L5B_1,3.18,Crystallographic structure of neutralizing antibody 2-15 in complex with SARS-CoV-2 spike receptor-binding Domain (RBD).,2/10/2021,10.1016/j.celrep.2021.108950,
 7L7D,Antibody,AZD8895,,,7L7D_1,2.5,Crystal structure of SARS-CoV-2 spike RBD in complex with human monoclonal antibody AZD8895,9/1/2021,,
 7L7E,Antibody,AZD1061,,"C,D,E,F,M,N,O,P",7L7E_1;7L7E_4;7L7E_6;7L7E_8,3,Crystal structure of SARS-CoV-2 spike RBD in complex with human monoclonal antibodies AZD8895 and AZD1061,9/1/2021,,
 7L7E,Antibody,AZD8895,,"A,B,H,I,J,L,T,U",7L7E_2;7L7E_3;7L7E_5;7L7E_7,3,Crystal structure of SARS-CoV-2 spike RBD in complex with human monoclonal antibodies AZD8895 and AZD1061,9/1/2021,,
@@ -284,12 +284,12 @@ ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If 
 7LOP,Antibody,CV05-163,2,"H,L,X,Y",7LOP_2;7LOP_4,2.246,Crystal structure of SARS-CoV-2 receptor binding domain in complex with antibodies CV05-163 and CR3022,3/3/2021,10.1126/science.abh1139,
 7LQ7,Antibody,COVA1-16,4,"P,Q,T,U,y,z",7LQ7_2;7LQ7_3;7LQ7_5,3.4,Crystal structure of SARS-CoV-2 receptor binding domain in complex with antibodies CV503 and COVA1-16,9/15/2021,,
 7LQ7,Antibody,CV503,,"C,D,F,G,H,L",7LQ7_1;7LQ7_4;7LQ7_6,3.4,Crystal structure of SARS-CoV-2 receptor binding domain in complex with antibodies CV503 and COVA1-16,9/15/2021,,
-7LQV,Antibody,4-8,,,7LQV_1;7LQV_2;7LQV_3,3.25,Cryo-EM structure of NTD-directed neutralizing antibody 4-8 Fab in complex with SARS-CoV-2 S2P spike,3/24/2021,,
-7LQW,Antibody,2-17,,,7LQW_1,4.47,Cryo-EM structure of NTD-directed neutralizing antibody 2-17 Fab in complex with SARS-CoV-2 S2P spike,3/24/2021,10.1016/j.chom.2021.03.005,
+7LQV,Antibody,8-Apr,,,7LQV_1;7LQV_2;7LQV_3,3.25,Cryo-EM structure of NTD-directed neutralizing antibody 4-8 Fab in complex with SARS-CoV-2 S2P spike,3/24/2021,,
+7LQW,Antibody,17-Feb,,,7LQW_1,4.47,Cryo-EM structure of NTD-directed neutralizing antibody 2-17 Fab in complex with SARS-CoV-2 S2P spike,3/24/2021,10.1016/j.chom.2021.03.005,
 7LRS,Antibody,A23-58.1,1,,7LRS_1,3.89,Cryo-EM structure of SARS-CoV-2 spike in complex with neutralizing antibody A23-58.1 that targets the receptor-binding domain,7/14/2021,10.1126/science.abh1766,class disagreement (2)
 7LRT,Antibody,A23-58.1,1,,7LRT_1;7LRT_2;7LRT_3,3.54,Cryo-EM structure of SARS-CoV-2 spike in complex with neutralizing antibody A23-58.1 that targets the receptor-binding domain,7/14/2021,10.1126/science.abh1766,class disagreement (2)
-7LS9,Antibody,1-57,,,7LS9_1;7LS9_2;7LS9_3,3.42,Cryo-EM structure of neutralizing antibody 1-57 in complex with prefusion SARS-CoV-2 spike glycoprotein,3/17/2021,10.1016/j.str.2021.05.014,
-7LSS,Antibody,2-7,,,7LSS_1,3.72,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab 2-7,3/17/2021,10.1016/j.str.2021.05.014,
+7LS9,Antibody,Jan-57,,,7LS9_1;7LS9_2;7LS9_3,3.42,Cryo-EM structure of neutralizing antibody 1-57 in complex with prefusion SARS-CoV-2 spike glycoprotein,3/17/2021,10.1016/j.str.2021.05.014,
+7LSS,Antibody,7-Feb,,,7LSS_1,3.72,Cryo-EM structure of the SARS-CoV-2 spike glycoprotein bound to Fab 2-7,3/17/2021,10.1016/j.str.2021.05.014,
 7LX5,Nanobody/Sybody,WNb 10,,A,7LX5_1,3.44,The SARS-CoV-2 spike protein receptor binding domain bound to neutralizing nanobodies WNb 2 and WNb 10,5/5/2021,10.1073/pnas.2101918118,
 7LX5,Nanobody/Sybody,WNb 2,,C,7LX5_2,3.44,The SARS-CoV-2 spike protein receptor binding domain bound to neutralizing nanobodies WNb 2 and WNb 10,5/5/2021,10.1073/pnas.2101918118,
 7LXW,Antibody,S2X333,,,7LXW_1,"2.8, 2.8",SARS-CoV-2 S/S2M11/S2X333 Local Refinement,4/14/2021,10.1016/j.cell.2021.03.028,
@@ -357,7 +357,7 @@ ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If 
 7N4J,Antibody,WRAIR-2173,,,7N4J_1,2.207,Crystal structure of SARS-CoV-2 receptor binding domain in complex with neutralizing human antibody WRAIR-2173.,10/6/2021,10.1038/s41590-021-01068-z,
 7N4L,Antibody,WRAIR-2125,,,7N4L_1,3.601,Crystal structure of SARS-CoV-2 receptor binding domain in complex with neutralizing human antibody WRAIR-2125.,11/10/2021,10.1038/s41590-021-01068-z,
 7N4M,Antibody,WRAIR-2151,,,7N4M_1,3.79,Crystal structure of SARS-CoV-2 receptor binding domain in complex with neutralizing human antibody WRAIR-2151.,11/10/2021,10.1038/s41590-021-01068-z,
-7N5H,Antibody,2-36,,,7N5H_1;7N5H_2;7N5H_3,3.24,Cryo-EM structure of broadly neutralizing antibody 2-36 in complex with prefusion SARS-CoV-2 spike glycoprotein,11/3/2021,10.1101/2021.10.13.464307,
+7N5H,Antibody,Feb-36,,,7N5H_1;7N5H_2;7N5H_3,3.24,Cryo-EM structure of broadly neutralizing antibody 2-36 in complex with prefusion SARS-CoV-2 spike glycoprotein,11/3/2021,10.1101/2021.10.13.464307,
 7N62,Antibody,C12C9,,,7N62_1,4,SARS-CoV-2 Spike (2P) in complex with C12C9 Fab (NTD local reconstruction),8/4/2021,10.1101/2021.03.10.434840,
 7N64,Antibody,G32R7,3,,7N64_1,4.2,SARS-CoV-2 Spike (2P) in complex with G32R7 Fab (RBD and NTD local reconstruction),8/4/2021,10.1101/2021.03.10.434840,
 7N8H,Antibody,S2L20,,"B,C,I,J,N,O",7N8H_2;7N8H_3;7N8H_5,2.3,SARS-CoV-2 S (B.1.429 / epsilon variant) + S2M11 + S2L20 Global Refinement,7/14/2021,10.1126/science.abi7994,
@@ -437,7 +437,7 @@ ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If 
 7RKV,Antibody,C118,4,,7RKV_1;7RKV_2;7RKV_3,3.45,Structure of the SARS-CoV-2 S 6P trimer in complex with neutralizing antibody C118 (State 1),9/22/2021,10.1016/j.celrep.2021.109760,
 7RNJ,Antibody,S2P6,,,X,2.67,S2P6 Fab fragment bound to the SARS-CoV/SARS-CoV-2 spike stem helix peptide,8/11/2021,10.1126/science.abj3321,only modeled binding 1146-1160
 7RR0,Antibody,PDI 222,,,7RR0_1,3.12,SARS-CoV-2 receptor binding domain bound to Fab PDI 222,10/6/2021,10.1016/j.celrep.2021.109822,
-7RW2,Antibody,5-7,,,7RW2_1;7RW2_2;7RW2_3,3.5,Cryo-EM structure of NTD-directed neutralizing antibody 5-7 in complex with prefusion SARS-CoV-2 spike glycoprotein,9/1/2021,10.1101/2021.06.29.450397,
+7RW2,Antibody,7-May,,,7RW2_1;7RW2_2;7RW2_3,3.5,Cryo-EM structure of NTD-directed neutralizing antibody 5-7 in complex with prefusion SARS-CoV-2 spike glycoprotein,9/1/2021,10.1101/2021.06.29.450397,
 7RXD,Other,Legobody,,,7RXD_1,3.6,CryoEM structure of RBD domain of COVID-19 in complex with Legobody,10/6/2021,10.1073/pnas.2115001118,Nanobody attached to two scaffolds.
 7S0B,Antibody,N-612-056,,,7S0B_1;7S0B_2,2.9,Structure of the SARS-CoV-2 RBD in complex with neutralizing antibody N-612-056,10/6/2021,10.1101/2021.09.14.460356,
 7S0C,Antibody,N-612-017,3,,7S0C_1;7S0C_2,3.25,Structure of the SARS-CoV-2 S 6P trimer in complex with neutralizing antibody N-612-017,10/6/2021,10.1101/2021.09.14.460356,
