@@ -60,16 +60,16 @@
 	* `pdb=best_relaxed_pdbs/6XC4_1_relaxed.pdb`
 	* `bn="$(basename $pdb .pdb)"`
 	* `od=computed_omicron_models`
-	* `# Reference RRMC`
+	* Reference RRMC
 	* `jobname="${bn:0:6}"_rpk_cons_wt`
 	* `python model_rbd_mutations.py -s $pdb -name ${jobname} -od $od -n 10 -cst`
-	* `# Omicron RRMC`
+	* Omicron RRMC
 	* `jobname="${bn:0:6}"_rpk_cons_om`
 	* `python model_rbd_mutations.py -s $pdb -name ${jobname} -od $od -n 10 -cst -m`
-	* `# Reference RRMF`
+	* Reference RRMF
 	* `jobname="${bn:0:6}"_rpk_free_wt`
 	* `python model_rbd_mutations.py -s $pdb -name ${jobname} -od $od -n 10`
-	* `# Omicron RRMF`
+	* Omicron RRMF
 	* `jobname="${bn:0:6}"_rpk_free_om`
 	* `python model_rbd_mutations.py -s $pdb -name ${jobname} -od $od -n 10 -m`
 * We generated ten decoys for each variant and method and selected the one with the lowest total score as the representative
@@ -83,16 +83,16 @@
 	* `ompdb=af2_pdbs/6XC4_1_af2_om.pdb`
 	* `bn="$(basename $pdb .pdb)"`
 	* `od=computed_omicron_models`
-	* `# Reference AFRC`
+	* Reference AFRC
 	* `jobname="${bn:0:6}"_af2_cons_wt`
 	* `python relax_new_pdb.py $wtpdb -name ${jobname} -od $od -n 10`
-	* `# Omicron AFRC`
+	* Omicron AFRC
 	* `jobname="${bn:0:6}"_af2_cons_om`
 	* `python relax_new_pdb.py $ompdb -name ${jobname} -od $od -n 10`
-	* `# Reference AFRF`
+	* Reference AFRF
 	* `jobname="${bn:0:6}"_af2_free_wt`
 	* `python relax_new_pdb.py $wtpdb -name ${jobname} -od $od -n 10 -nocons`
-	* `# Omicron AFRF`
+	* Omicron AFRF
 	* `jobname="${bn:0:6}"_af2_free_om`
 	* `python relax_new_pdb.py $ompdb -name ${jobname} -od $od -n 10 -nocons`
 * We generated ten decoys for each variant and method and selected the one with the lowest total score as the representative
@@ -109,7 +109,7 @@
 	* `python omicron_data_analysis.py -od $od`
 
 ### Antibody Redesign
-
+* Antibody redesign was performed using redesign_antibody.py with the following arguments:
     * `-wt`/`--wt_pdb`: Pick starting reference PDB
     * `-om`/`--om_pdb`: Pick starting omicron PDB
     * `-od`/`--out_dir`: Name an output directory for the consolidated csv and decoys
@@ -124,11 +124,11 @@
 	* `mod=rpk_cons`
 	* `wtpdb=therapeutic_entity_models_and_plots/${complex}/${complex}_${mod}_wt.pdb`
 	* `ompdb=therapeutic_entity_models_and_plots/${complex}/${complex}_${mod}_om.pdb`
-	* `# Redesigning 6XDG_1 RRMC around K417N`
+	* Redesigning 6XDG_1 RRMC around K417N
 	* `site=417`
 	* `outname=${complex}_${mod}_design_${site}`
 	* `python redesign_antibody.py -wt $wtpdb -om $ompdb -name $outname -od $od -site ${site} -wd -n 20`
-	* `# Redesigning 6XDG_1 RRMC around all substitutions`
+	* Redesigning 6XDG_1 RRMC around all substitutions
 	* `outname=${complex}_${mod}_design_all`
 	* `python redesign_antibody.py -wt $wtpdb -om $ompdb -name $outname -od $od -site 339 371 373 375 417 440 446 477 478 484 493 496 498 501 505 -wd -n 20`
 * We generated 20 designs for each complex, modeling method, and site (and all sites together) and reveiwed designs manually to identify potential improvements.
