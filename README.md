@@ -3,7 +3,14 @@
 ## Requirements
 
 * All scripts and other neccessary files for our model generation and analysis are in the scripts folder
-* Scripts utilize PyRosetta (https://www.pyrosetta.org/) and several other Python modules, included in the Anaconda environment pyr.yml
+* Scripts utilize PyRosetta (which can be licensed at https://www.pyrosetta.org/) and several other Python modules, included in the Anaconda environment pyr.yml
+* PDB files can be downloaded from the Protein Data Bank (https://www.rcsb.org/) 
+* Development and use was done in Ubuntu 20.04.3 LTS and CentOS Linux release 7.9.2009
+
+## Instalation
+
+* Installing Anaconda (https://www.anaconda.com/) into a Linux terminal and used to duplicate our environment, in which all scripts should run correctly
+* Install time may be approximately 1.5 hours
 
 ## Usage for scripts for omicron-antibody model generation and analysis
 
@@ -17,11 +24,18 @@
 	* sabdab_20211201_processed.csv
 	* sabdab_20211201_summary_file.csv
 	* SARS-CoV-2Spike-AntibodyComplexes_12-01-2021_2.csv
+* Antibody PDB files can be downloaded directly from the Protein Data Bank (https://www.rcsb.org/)
+	* Some ligands cause loading errors in Rosetta. This can be prevented by deleting all non-ATOM linse from the PDB file.
 * Example commands
 	* `csv="trimmed_pdb_structures/pdb_complexes.csv"`
 	* `outpath="trimmed_pdb_structures"`
 	* `inpdb="6xc4.pdb"`
 	* `python tabulate_res_interactions.py -p $inpdb -c $csv -o $outpath`
+* Output:
+	* A trimmed PDB file for each complex in the input PDB (a trimeric spike with three antibodies will produce three trimmed outputs)
+	* A table summarizing the complexes (their source chain IDs and sets of antigen residues contacted)
+	* If there are insertions/deletions in the PDB, they will be reported in an insertions.txt file for each complex
+* Approximate runtime: 5 minutes
 * In cases where automatic trimming script failed, manual trimming was performed by referencing SAbDab tables where available to identify relevant chains for each complex, then deleting extraneous residues and renaming chains in PyMOL.
 
 ### Performing baseline energetic minimization (Relax)
@@ -43,6 +57,10 @@
 	* `pdb=trimmed_pdb_structures/6XC4_1.pdb`
 	* `od=relaxed_pdbs`
 	* `python relax_new_pdb.py $pdb -od $od -n 10`
+* Output:
+	* PDB files with suffix numbers from 0-n
+	* A .fasc file summarizing decoy energies for all models made by a single processor
+* Approximate runtime: 4 hours per decoy, depends on complex size
 * We generated ten decoys and selected the one with the lowest total score as the representative
 
 ### Making RRMC and RRMF models
@@ -72,6 +90,10 @@
 	* Omicron RRMF
 	* `jobname="${bn:0:6}"_rpk_free_om`
 	* `python model_rbd_mutations.py -s $pdb -name ${jobname} -od $od -n 10 -m`
+* Output:
+	* PDB files with suffix numbers from 0-n
+	* A .fasc file summarizing decoy energies for all models made by a single processor
+* Approximate runtime: 1 hour per decoy, depends on complex size
 * We generated ten decoys for each variant and method and selected the one with the lowest total score as the representative
 
 ### Making AFRC and  AFRF models
@@ -95,6 +117,10 @@
 	* Omicron AFRF
 	* `jobname="${bn:0:6}"_af2_free_om`
 	* `python relax_new_pdb.py $ompdb -name ${jobname} -od $od -n 10 -nocons`
+* Output:
+	* PDB files with suffix numbers from 0-n
+	* A .fasc file summarizing decoy energies for all models made by a single processor
+* Approximate runtime: 4 hours per decoy, depends on complex size
 * We generated ten decoys for each variant and method and selected the one with the lowest total score as the representative
 
 ### Plotting
@@ -107,6 +133,19 @@
 * Example commands: 
 	* `od=therapeutic_entity_models_and_plots/6XC4_1`
 	* `python omicron_data_analysis.py -od $od`
+* Output:
+	* energy_and_changed_residue_identification.csv summarizing important interface changes
+	* For each simulation condition: 
+		* total_res_energies.png plot indicating per-residue total scores 
+		* interface_res_energies.png plot indicating per-residue interfacial scores 
+	* If not all 8 models are present:
+		* A missing_models.csv listing missing conditions
+	* If all 8 models are present:
+		* single_res_energies.csv table indicating all per-residue energy differences between reference and Omicron models
+		* consensus_table.csv table identifying consensus stabilization/destabilization predictions at each mutated site
+		* mutated_interface_res_energies.png plot showing interface energies at mutated sites with consensus-identified stabilization/destabilization
+		* non-mutated_interface_res_energies.png showing interface energies at non-mutated sites with consensus-identified stabilization/destabilization
+* Approximate runtime: 5 minutes
 
 ### Antibody Redesign
 * Antibody redesign was performed using redesign_antibody.py with the following arguments:
@@ -131,4 +170,9 @@
 	* Redesigning 6XDG_1 RRMC around all substitutions
 	* `outname=${complex}_${mod}_design_all`
 	* `python redesign_antibody.py -wt $wtpdb -om $ompdb -name $outname -od $od -site 339 371 373 375 417 440 446 477 478 484 493 496 498 501 505 -wd -n 20`
+* Output:
+	* PDB files with suffix numbers from 0-n
+	* A .fasc file summarizing decoy energies for all models made by a single processor
+	* designs.csv table summarizing decoy total score and antibody substitutions for all models made by a single processor
+* Approximate runtime: 4 hours per decoy, depends on size of site selection and complex size
 * We generated 20 designs for each complex, modeling method, and site (and all sites together) and reveiwed designs manually to identify potential improvements.
