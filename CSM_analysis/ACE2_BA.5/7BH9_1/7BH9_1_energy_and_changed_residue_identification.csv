@@ -1,0 +1,3 @@
+pdb,antibody,method,constrained,wt_total,om_total,d_total,wt_interface,om_interface,d_interface,tot_stab_mut_close,tot_stab_mut_distal,tot_stab_other_close,tot_stab_other_distal,tot_destab_mut_close,tot_destab_other_close,tot_destab_mut_distal,tot_destab_other_distal,int_destab_mut,int_destab_other,int_stab_mut,int_stab_other
+7BH9,1,rpk,cons,-325.65854049745326,-321.38781882087846,4.270721676574794,-33.12521489075506,-26.66839661547185,6.4568182752832115,,408,,,417,446,373;375,,417;486,,498;501,
+7BH9,1,rpk,free,-369.03253058386724,-359.861033203382,9.17149738048522,-49.237426473086245,-44.83714686063259,4.400279612453652,,,496,374;470;508,405;417;484;486;501,446;490;493,373,378;437,417;486,446;493;506,477;498;501,489;496
