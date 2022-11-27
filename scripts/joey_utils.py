@@ -1,10 +1,8 @@
 ################################################################################
-# Text functions
+# General text functions
 
 def str2bool(v):
 	""" Converts a number of potential string inputs to boolean """
-	import argparse 
-
 	if isinstance(v, bool):
 		return v
 	if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -12,20 +10,32 @@ def str2bool(v):
 	elif v.lower() in ('no', 'false', 'f', 'n', '0'):
 		return False
 	else:
-		raise argparse.ArgumentTypeError('Boolean value expected.')
+		raise ValueError('Boolean value expected.')
 
 
 def str2int(v):
+	""" 
+	Attempts to convert an input to an integer, returning the original input if
+	conversion is not feasible
+	"""
+	import warnings
 	try: 
 		return int(v)
 	except:
+		warnings.warn("Could not convert to an int:\n{}".format(v))
 		return v
 
 
 def str2float(v):
+	""" 
+	Attempts to convert an input to a float, returning the original input if
+	conversion is not feasible
+	"""
+	import warnings
 	try: 
 		return float(v)
 	except:
+		warnings.warn("Could not convert to a float:\n{}".format(v))
 		return v
 
 
@@ -121,34 +131,59 @@ def split_string_at_numbers(string):
 
 	return [str2int(i) for i in out_str.split('~insert_break_here~')]
 
-
-def join_list(item_list, joiner=''):
-	"""
-	Convert a list into a string of items. By default, there will be nothing 
-	between joined items, though different joiner strings can be used. List
-	does not need to be converted to strings first.
-	"""
-	return joiner.join([str(i) for i in item_list])
-
 ################################################################################
 # Protein-specific text functions
 
-def get_aa1_list():
+def get_aa1_list(mode='A'):
 	"""
 	Give a list of the 20 canonical amino acids in 1-letter form
+
+	Mode determines the order. 
+		A: alphabetical
+		C: by conservative AA type cluster (see is_conservative)
 	"""
-	return ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
-		'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
+	# Confirm acceptable mode choice
+	mode = mode.upper()
+	if mode not in ['A', 'C']:
+		raise ValueError('Mode options are "A" (alphabetical) or "C" (cluster)')
+
+	if mode == 'A':
+		return ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
+			'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
+
+	if mode == 'C':
+		return ['A', 'F', 'I', 'L', 'M', 'V', 'W', 'Y', 
+			'N', 'Q', 'S', 'T', 
+			'H', 'K', 'R', 
+			'D', 'E', 
+			'C', 'G', 'P']
 		
 
-def get_aa3_list():
+def get_aa3_list(mode='A'):
 	"""
 	Give a list of the 20 canonical amino acids in 3-letter form
+
+	Mode determines the order. 
+		A: alphabetical
+		C: by conservative AA type cluster (see is_conservative)
 	"""
-	return ['ALA', 'CYS', 'ASP', 'GLU', 'PHE', 
-		'GLY', 'HIS', 'ILE', 'LYS', 'LEU', 
-		'MET', 'ASN', 'PRO', 'GLN', 'ARG', 
-		'SER', 'THR', 'VAL', 'TRP', 'TYR']
+	# Confirm acceptable mode choice
+	mode = mode.upper()
+	if mode not in ['A', 'C']:
+		raise ValueError('Mode options are "A" (alphabetical) or "C" (cluster)')
+
+	if mode == 'A':
+		return ['ALA', 'CYS', 'ASP', 'GLU', 'PHE', 
+			'GLY', 'HIS', 'ILE', 'LYS', 'LEU', 
+			'MET', 'ASN', 'PRO', 'GLN', 'ARG', 
+			'SER', 'THR', 'VAL', 'TRP', 'TYR']
+
+	if mode == 'C':
+		return ['ALA', 'PHE', 'ILE', 'LEU', 'MET', 'VAL', 'TRP', 'TYR', 
+			'ANS', 'GLN', 'SER', 'THR', 
+			'HIS', 'LYS', 'ARG', 
+			'ASP', 'GLU', 
+			'CYS', 'GLY', 'PRO']
 		
 
 def get_aa_dict():
@@ -265,7 +300,7 @@ def is_conservative(wt_aa, mut_aa):
 					['C'],
 					['D', 'E'],
 					['G'], 
-					['H','K','R'],
+					['H', 'K', 'R'],
 					['N', 'Q', 'S', 'T'],
 					['P'],
 					['U']]
@@ -283,6 +318,51 @@ def is_conservative(wt_aa, mut_aa):
 
 ################################################################################
 # List manipulation functions
+
+def join_list(item_list, joiner=''):
+	"""
+	Convert a list into a string of items. By default, there will be nothing 
+	between joined items, though different joiner strings can be used. List
+	does not need to be converted to strings first.
+	"""
+	return joiner.join([str(i) for i in item_list])
+
+
+def clean_list(in_list, to_type=None, nonredundant=True, sort=True):
+	"""
+	Given an input list, returns a cleaned list. 
+
+	- If given a type (str, int, float), will attempt to make all 
+		elements into that type, leaving un-convertable elements unchanged
+	- Removes redundancies (true by default)
+	- Sorts (true by default)
+	"""
+	# Catch improper inputs for object type
+	if to_type not in [None, str, int, float]:
+		err_text = 'to_type must be str, int, float'
+		raise ValueError(err_text)
+
+	# Create modified list
+	out_list = in_list[:]
+
+	# Cast type
+	if to_type == str:
+		out_list = [str(i) for i in out_list]
+	if to_type == int:
+		out_list = [str2int(i) for i in out_list]
+	if to_type == float:
+		out_list = [str2float(i) for i in out_list]
+
+	# Remove redundancies from list
+	if nonredundant:
+		out_list = list(set(out_list))
+
+	# Sort list
+	if sort:
+		out_list = sorted(out_list)
+
+	return out_list
+
 
 def partition_list(in_list, partitions, member):
 	"""
@@ -505,6 +585,84 @@ def sum_squares(array):
 	"""
 	return sum(i ** 2 for i in array)
 
+
+def interquartile_bounds(array):
+	"""
+	For a given array, calculates the boundaries for outlier classification, 
+	based on being more than 1.5 * (interquartile range) above or below the 
+	quartiles. Returns lower and upper bounds.
+	"""
+	import numpy as np
+
+	# Determine quartiles
+	q1 = np.percentile(array, 25, interpolation='midpoint')
+	q3 = np.percentile(array, 75, interpolation='midpoint')
+
+	# Determine interquartile range
+	iqr = q3 - q1
+
+	# Determine bounds
+	lower = q1 - 1.5 * iqr
+	upper = q3 + 1.5 * iqr
+	return lower, upper
+
+
+def calc_distance(c1, c2):
+	""" 
+	Returns the distance between two XYZ coordinate vectors
+	"""
+	import numpy as np
+
+	return np.linalg.norm(np.array(c1) - np.array(c2))
+
+
+def calc_angle(c1, c2, c3):
+	"""
+	Calculate the angle between three points, about the middle point, c2
+
+	Returns value in degrees
+	"""
+	import numpy as np
+
+	# Get triangle legs
+	l1 = np.array(c1) - np.array(c2)
+	l2 = np.array(c3) - np.array(c2)
+
+	# Determine angle
+	cosine_angle = np.dot(l1, l2) / (np.linalg.norm(l1) * np.linalg.norm(l2))
+	angle = np.arccos(cosine_angle)
+
+	return np.degrees(angle)
+
+
+def calc_dihedral(c1, c2, c3, c4):
+	"""
+	Calculate the dihedral/torsion angle between four points, between c2 and c3
+
+	Returns value in degrees
+	"""
+	import numpy as np
+
+	# Get dihedral vectors
+	v1 = np.array(c1) - np.array(c2)
+	v2 = np.array(c3) - np.array(c2)
+	v3 = np.array(c4) - np.array(c3)
+
+	# Normalize v2 magnitude
+	v2 /= np.linalg.norm(v2)
+
+	# Vector Projections
+	## p1 = projection of v1 onto plane perpendicular to v2
+	## p2 = projection of v3 onto plane perpendicular to v2
+	p1 = v1 - np.dot(v1, v2)*v2
+	p2 = v3 - np.dot(v3, v2)*v2
+
+	# Determine torsion angle
+	x = np.dot(p1, p2)
+	y = np.dot(np.cross(v2, p1), p2)
+	
+	return np.degrees(np.arctan2(y, x))
+
 ################################################################################
 # General file reading and editing 
 
@@ -661,6 +819,15 @@ def move_file(input_filename, output_filename, gunzip=False, gzip=False):
 	return output_filename
 
 
+def delete_file(file_name):
+	""" Deletes a file """
+	from os import remove
+
+	remove(find_maybe_compressed_file(file_name))
+
+	return
+
+
 def out_directory(directory_name):
 	"""
 	Given an output directory string, checks whether that directory exists.  
@@ -682,12 +849,12 @@ def output_file_name(filename, path='', extension='',
 	"""
 	Given a filename, can add prefix, suffix, and/or path to the filename.
 	If the input file includes a path, that path will be retained by default 
-	(an empty string) unless a but can be set to a value or changed to None. The
-	same is true of the file extension. Detection of file extension locates the 
-	last period (.), so that is where suffixes will be added, though .gz 
-	extensions will be stripped off by default. Prefixes and suffixes will be 
-	appended with underscores (_). If mkdir is True and the path does not exist, 
-	it will be created, assuming that there is a path.
+	(an empty string) but can be set to a value or changed to None. The same
+	is true of the file extension. Detection of file extension locates the last
+	period (.), so that is where suffixes will be added, though .gz extensions
+	will be stripped off by default. Prefixes and suffixes will be appended 
+	with underscores (_). If mkdir is True and the path does not exist, it 
+	will be created, assuming that there is a path.
 	"""
 	from os.path import basename, dirname, join, splitext
 
@@ -726,411 +893,6 @@ def output_file_name(filename, path='', extension='',
 		outname = '.'.join([outname, ext.lstrip('.')])
 
 	return join(pathname, outname)
-
-################################################################################
-# PDB-specific file functions
-
-def collect_pdbs_list(target_dir, sort=True):
-	"""
-	Uses glob to collect all .pdb and .pdb.gz files in a directory. 
-	"""
-	from glob import glob
-	from os.path import join
-
-	all_pdbs = glob(join(target_dir, '*.pdb'))
-	all_pdbs += glob(join(target_dir, '*.pdb.gz'))
-	all_pdbs += glob(join(target_dir, '*.ent'))
-	all_pdbs += glob(join(target_dir, '*.ent.gz'))
-
-	if sort:
-		all_pdbs.sort()
-
-	return all_pdbs
-
-
-def fix_pdb(pdb, extension=None, clobber=False):
-	"""
-	Cleans up a PDB file, stripping out LINK lines and changing enzdes headers 
-	so that constraints won't crash. Overwrites the original with the cleaned 
-	version. An extension option may be given that will allow for the insertion 
-	of extra residues into a chain. This extension must be in the format of 
-	[chain_modified, modification_start, altered_length], ex ['A', 96, 5]
-	"""
-	# Unzip and open the PDB
-	pdb = find_maybe_compressed_file(pdb, unzip_file=True)
-	with open(pdb, 'r') as r:
-		lines = r.readlines()
-
-	# Collect lists of LINK lines, enzdes header lines, and range of atom lines
-	link_lines = []
-	enzdes_lines = []
-	first_atom = 0
-	last_atom = 0
-	for n, line in enumerate(lines):
-		# Link lines
-		if 'LINK' in line:
-			link_lines.append(n)
-
-		# Enzdes lined
-		if 'REMARK 666' in line:
-			enzdes_lines.append(n)
-
-		# Atom lines range
-		if 'ATOM' in line and first_atom == 0:
-			first_atom = n
-		if 'ATOM' in line and n > last_atom:
-			last_atom = n
-
-	# Remove LINK lines, which interfere with putting in constraints
-	for l2r in link_lines:
-		lines[l2r] = '\n'
-
-	# Fixing enzdes comments block so comments match (mutated) PDB sequence
-	for eline in enzdes_lines:
-		line_text = lines[eline]
-		# Splitting into columns. Columns 4-6 refer to the first residue, and 
-		# columns 9-11 refer to the second residue
-		e_columns = line_text.split()
-
-		# Checking whether enzdes constraint headers match sequence in PDB
-		for e_chain, e_aa, e_res in [e_columns[4:7], e_columns[9:12]]:
-			orig_text = ' '.join([e_chain, e_aa, e_res])
-
-			# Addressing extension
-			if extension:
-				ext_chain, ext_start, ext_len = extension
-				if e_chain == ext_chain and int(e_res) > ext_start:
-					e_res = str(int(e_res) + ext_len)
-					correct_text = ' '.join([e_chain, e_aa, e_res])
-					line_text = line_text.replace(orig_text, correct_text)
-
-			# Looping through all ATOM lines in the PDB until finding the 
-			# right residue, then checking agreement and stopping loop
-			for atom_line in lines[first_atom: last_atom]:
-				# Skip any line that isn't an atom line, such as a TER
-				if ('ATOM' not in atom_line):
-					continue
-
-				# Splitting into columns. Column 4 is the chain, column 5 is 
-				# the residue number, column 3 is the aa name
-				a_columns = atom_line.split()
-				a_aa, a_chain, a_res = a_columns[3:6]
-
-				# Skip until finding the right residue in the right chain
-				if (a_chain != e_chain) or (a_res != e_res):
-					continue
-
-				# If the enzdes header and PDB agree, stop there
-				if e_aa == a_aa:
-					break
-
-				# If the enzdes header and PDB disagree, correct the header
-				else:
-					correct_text = ' '.join([a_chain, a_aa, a_res])
-					line_text = line_text.replace(orig_text, correct_text)
-					break
-
-		# Setting header line with corrected text
-		lines[eline] = line_text
-		
-	# Saving corrected PDB
-	if clobber:
-		with open(pdb, 'w') as w:
-			w.writelines(lines)
-	else:
-		with open(pdb.replace('.pdb', '_corrected.pdb'), 'w') as w:
-			w.writelines(lines)
-
-	return
-
-
-def check_decoy_counts(decoy_dir, decoy_name_list, decoy_count):
-	"""
-	Given a list of base names and an expected decoy count, returns a list of 
-	names that didn't run at all and a dict of names with how many decoys short
-	of the expected count they are.
-	"""
-	from glob import glob 
-
-	# Initialize collection lists
-	pdbs_that_didnt_process = []
-	pdbs_missing_decoys = {}
-
-	# Iterate through decoy name list, checking decoy counts
-	for dec_name in decoy_name_list:
-		# Collet list of all decoys with the given base name
-		decoys = glob(output_file_name(dec_name, path=decoy_dir, 
-			extension='pdb', suffix='*'))
-
-		# If the list is empty, add to the didnt_process list
-		if len(decoys) == 0:
-			pdbs_that_didnt_process.append(dec_name)
-			continue
-
-		# If the list is incomplete, add to the missing_decoys dict
-		if len(decoys) != decoy_count:
-			missing_decs[dec_name] = decoy_count - len(decoys)
-
-
-	return pdbs_that_didnt_process, pdbs_missing_decoys
-
-################################################################################
-# PDB informatics functions
-
-def extract_pdb_atom_lines(pdb, het=False, enzdes=False, 
-	link=False, connect=False):
-	"""
-	Reads a PDB file and extracts the ATOM lines. By default, only ATOM lines 
-	are collected. However, if het is set to True, all HETATM lines will also be
-	collected. If het is a list of strings (case-sensitive), only the HETATM 
-	lines including those residue types will be collected with the ATOM lines.
-	If enzdes is True, REMARK 666 lines will also be collected. If link is True,
-	LINK lines will also be collected. If connect is True, CONNECT lines will 
-	also be collected.
-	"""
-	# Read in the PDB file
-	with open(pdb, 'r') as r:
-		pdb_lines = r.readlines()
-
-	# Go through lines, collecting only the 
-	pdb_extract = []
-	for line in pdb_lines:
-		# Collect ATOM lines
-		if line[:4] == 'ATOM':
-			pdb_extract.append(line)
-			continue
-
-		# Collect HETATM lines
-		if het:
-			if line[:6] == 'HETATM':
-				if not isinstance(het, list):
-					pdb_extract.append(line)
-					continue
-				else:
-					for atype in het:
-						if atype in line:
-							pdb_extract.append(line)
-							break
-
-		# Collect enzdes lines
-		if enzdes:
-			if line[:10] == 'REMARK 666':
-				pdb_extract.append(line)
-				continue
-
-		# Collect LINK lines
-		if link:
-			if line[:4] == 'LINK':
-				pdb_extract.append(line)
-				continue
-
-		# Collect enzdes lines
-		if connect:
-			if line[:6] == 'CONECT':
-				pdb_extract.append(line)
-				continue
-	return pdb_extract
-
-
-def tabulate_pdb_atom_lines(pdb, het=False):
-	"""
-	Generates a pandas dataframe from a PDB's ATOM lines. Can include HETATM as 
-	well.
-	"""
-	import pandas as pd
-
-	# Extract PDB ATOM/HETATM lines
-	atom_lines = extract_pdb_atom_lines(pdb, het=het)
-
-	# Define columns
-	pdb_atom_cols = {'type': (0, 4), 'atom_number': (6, 11), 
-		'atom_name': (12, 16), 'alt_location': (16, 17), 'res_name': (17, 20), 
-		'chain_id': (21,22), 'res_number': (22, 27), 'x': (30, 38), 
-		'y': (38, 46), 'z':(46,54), 'occupancy': (54, 60), 
-		'b-factor': (60, 66), 'segment': (72, 76), 'element': (76, 80)}
-
-	# Create data frame
-	atom_table = pd.DataFrame([])
-	for atom_line in atom_lines:
-		atom_dict = {}
-		for col, ind in pdb_atom_cols.items():
-			atom_dict[col] = atom_line[ind[0]:ind[1]].strip()
-		atom_table = atom_table.append(atom_dict, ignore_index=True)
-
-	# Convert columns from strings to numeric where appropriate
-	for col in ['atom_number', 'res_number']:
-		atom_table[col] = atom_table[col].astype(int, errors='ignore')
-	for col in ['x', 'y', 'z', 'b-factor', 'occupancy']:
-		atom_table[col] = atom_table[col].astype(float)
-
-	return atom_table
-
-
-def get_pdb_sequences(pdb_atom_table):
-	"""
-	Given a PDB atom table from tabulate_pdb_atom_lines, generates a dict of 
-	chains and their sequences
-	"""
-	# Extract CA-only table to read sequence
-	ca_table = pdb_atom_table[pdb_atom_table['atom_name'] == 'CA']
-
-	# Create dict of chains and sequences
-	chains_sequences = {}
-
-	# Iterate through all chains to collect sequences
-	for chain in ca_table['chain_id'].unique():
-		chain_ca_table = ca_table[ca_table['chain_id'] == chain]
-		sequence = ''.join(
-			[convert_aa_name(i) for i in chain_ca_table['res_name']])
-		chains_sequences[chain] = sequence
-	
-	return chains_sequences
-
-
-def find_aa_in_pdb_atom_table(atom_table, chain, pdb_number, aa1=True):
-	"""
-	From a PDB atom table like those generated by tabulate_pdb_atom_lines, find 
-	the amino acid name for the residue of specified chain and number. The aa1 
-	option will control whether the 1-letter (True) or 3-letter (False) name 
-	will be returned.
-	"""
-	# Isolate the CA of the desired residue
-	target_ca = atom_table[(atom_table['atom_name'] == 'CA') & 
-		(atom_table['chain_id'] == chain) & 
-		(atom_table['res_number'] == pdb_number)]
-
-	# Get the residue name
-	res_name = target_ca['res_name'].to_string(index=False).strip()
-
-	# Outpur the residue name in desired form
-	if aa1:
-		return convert_aa_name(res_name)
-	else:
-		return res_name
-
-
-def check_pdb_atom_table_contiguity(atom_table, min_res=1, max_res=0):
-	"""
-	PDB files may include missing residues or insertion residues (such as 
-	antibody CDR loops with redundant numbering). This function checks whether 
-	an atom table made by tabulate_pdb_atom_lines is missing residues or has 
-	insertions. Residues with lettered names (which don't convert to integers) 
-	are identified as insertions. Deletions are identified by finding gaps in a 
-	range, which by default goes from 1 to the max residue number of each chain, 
-	though the bounds can be set manually (min_res, max_res) or automatically 
-	identify the range of the chain (by setting the value to 0). Returns a dict 
-	of dicts. Outer: insertions, deletions; inner: a list for each chain.
-	"""
-	# Extract CA-only table to read sequence
-	ca_table = atom_table[atom_table['atom_name'] == 'CA']
-
-	# Initialize report dict
-	residue_indels = {i:{} for i in ['insertions', 'deletions']}
-
-	# Iterate through all chains to collect indels
-	for chain in ca_table['chain_id'].unique():
-		# Isolate single chain
-		chain_ca_table = ca_table[ca_table['chain_id'] == chain]
-
-		# List all residues
-		res_list = [str2int(i) for i in chain_ca_table['res_number']]
-
-		# Identify insertions
-		insertion_residues = [i for i in res_list if type(i) != int]
-		residue_indels['insertions'][chain] = insertion_residues
-
-		# Finding missing residues
-		res_list = [res for res in res_list if res not in insertion_residues]
-		## Determine chain min residue
-		chain_min = min_res
-		if min_res == 0:
-			chain_min =  min(res_list)
-		## Determine chain max residue
-		chain_max = max_res
-		if max_res == 0:
-			chain_max =  max(res_list)
-		## Check for gaps in residue number list
-		missing_res = [res for res in range(chain_min, chain_max + 1) 
-			if res not in res_list]
-		residue_indels['deletions'][chain] = missing_res
-
-	return residue_indels
-
-
-def atom_table_to_pdb(atom_table, pdb_name):
-	"""
-	Does the reverse operation of tabulate_pdb_atom_lines, converting a PDB atom
-	table back into a PDB with a specified pdb_name.
-	"""
-	# Create PDB line template string
-	pdb_line_string = '{:<4}  {:>5} {:^4}{:<1}{:<3} {:<1}{:^5}    '
-	pdb_line_string += '{:<8}{:<8}{:<8}{:^6}{:^6}      {:<4}{:<4}\n'
-
-	# Write formatted lines to the PDB file
-	with open(pdb_name, 'w') as w:
-		for ind, row in atom_table.iterrows():
-			w.write(pdb_line_string.format(*[str(i) for i in list(row)]))
-
-	return
-
-
-def extract_pdb_energy_lines(pdb):
-	"""
-	Finds and returns the lines from a PDB that include the pose energies	
-	"""
-	# Read the PDB
-	with open(pdb, 'r') as r:
-		pdb_lines = r.readlines()
-
-	# Identify endpoints of pose energies table
-	e_table_begin = None
-	e_table_end = None
-	for n, pdb_line in enumerate(pdb_lines):
-		if "BEGIN_POSE_ENERGIES_TABLE" in pdb_line:
-			e_table_begin = n + 1
-		if "END_POSE_ENERGIES_TABLE" in pdb_line:
-			e_table_end = n
-			break
-
-	return pdb_lines[e_table_begin: e_table_end]
-
-
-def tabulate_pdb_energy_lines(pdb):
-	"""
-	Generates a pandas dataframe from a PDB's Rosetta energy lines.
-	"""
-	import pandas as pd
-	import re
-
-	# Extract PDB Rosetta energy lines
-	energy_lines = extract_pdb_energy_lines(pdb)
-
-	# Create table
-	headers = energy_lines.pop(0).strip().split()
-	energy_table = pd.DataFrame(columns=headers)
-
-	# Populate the table converting line strings to series of floats
-	for eline in energy_lines:
-		line_energies = [str2float(i) for i in eline.strip().split()]
-		line_energies = pd. Series(line_energies, index=headers)
-		energy_table = energy_table.append(line_energies, ignore_index=True)
-    
-	# Create residue site and name columns from label
-	energy_table['pdb_number'] = energy_table.apply(
-		lambda row: str2int(re.split('\W+|_', row['label'])[-1]), 
-		axis='columns')
-	energy_table['residue'] = energy_table.apply(
-		lambda row: convert_aa_name(re.split('\W+|_', row['label'])[0], 
-		return_orig=True), axis='columns')
-    
-	# Reorder columns
-	cols = ['pdb_number', 'residue', 'total']
-	headers.remove('label')
-	headers.remove('total')
-	cols += headers
-	energy_table = energy_table[cols]
-
-	return energy_table
 
 ################################################################################
 # Fasta functions (many functions require BioPython)
@@ -1260,6 +1022,59 @@ def display_alignment(alignment, width=80):
 		print(i)
 
 	return
+
+
+def tabulate_sequence_alignment(alignment):
+	"""
+	Input a biopython alignment to generate a pandas dataframe including the 
+	sequence numbers and letters at each position and identity and alignment 
+	columns, denoted by integers.
+	"""
+	import pandas as pd
+	import numpy as np
+
+	# Generate alignment string
+	alignment_string = generate_formatted_aligment(alignment, full=True)
+
+	# Split alignment string into sections representing different sequences
+	a_list = split_alignment_string(alignment_string)
+	s1, ident, s2 = a_list[:3]
+
+	# Create positions lists for both sequences
+	seq_positions = {}
+	for n, seq in enumerate([s1, s2]):
+		s_positions = []
+		s_val = 0
+		for i in list(seq):
+			if i == '-':
+				s_positions.append(np.nan)
+			else:
+				s_val += 1
+				s_positions.append(s_val)
+		seq_positions[n] = s_positions
+
+	# Create identity list
+	identities = []
+	for i in list(ident):
+		if i == '|':
+			identities.append(1)
+		else:
+			identities.append(0)
+	        
+	# Make table
+	align_df = pd.DataFrame({
+		's1_position': seq_positions[0],
+		's1_sequence': list(s1),
+		's2_position': seq_positions[1],
+		's2_sequence': list(s2),
+		'identity': identities})
+
+	# Add column to check whether residues are aligned 
+	align_df['aligned'] = align_df.apply(lambda row: int(
+		isinstance(row['s1_position'], int) and 
+		isinstance(row['s2_position'], int)), axis='columns')
+
+	return align_df
 
 
 def seq_to_seqrecord(seq, seqrecord):
@@ -1402,12 +1217,12 @@ def write_fastafile(sequence_records, write_file):
 def compare_sequences(seq1, seq2, first_res=1, repair=False, only_difs=False,
 	make_subs_column=False):
 	"""
-	Given a two sequence strings that this function assumes are similar, 
-	produces an aligned table from from which it is easy to identify the sites 
-	where the second sequence differs from the first, or where residues were 
-	sequenced badly (X). Returns a dataframe of sites. The columns in the 
-	dataframe are the seq_1 letter, the seq_2 letter, with the row index 
-	matching the first sequence. 
+	Given two sequence strings that this function assumes are similar, produces 
+	an aligned table from from which it is easy to identify the sites where the 
+	second sequence differs from the first, or where residues were sequenced 
+	badly (X). Returns a dataframe of sites. The columns in the dataframe are 
+	the seq_1 letter, the seq_2 letter, with the row index matching the first 
+	sequence. 
 
 	The first letter in the first seqence is assumed to be residue 1 by default, 
 	but chan be changed with the first_res option. 
@@ -1465,6 +1280,409 @@ def compare_sequences(seq1, seq2, first_res=1, repair=False, only_difs=False,
 	return aligned_table
 
 ################################################################################
+# PDB informatics functions
+
+def collect_pdbs_list(target_dir, sort=True):
+	"""
+	Uses glob to collect all .pdb and .pdb.gz files in a directory. 
+	"""
+	from glob import glob
+	from os.path import join
+
+	all_pdbs = glob(join(target_dir, '*.pdb'))
+	all_pdbs += glob(join(target_dir, '*.pdb.gz'))
+	all_pdbs += glob(join(target_dir, '*.ent'))
+	all_pdbs += glob(join(target_dir, '*.ent.gz'))
+
+	if sort:
+		all_pdbs.sort()
+
+	return all_pdbs
+
+
+def check_decoy_counts(decoy_dir, decoy_name_list, decoy_count):
+	"""
+	Given a list of base names and an expected decoy count, returns a list of 
+	names that didn't run at all and a dict of names with how many decoys short
+	of the expected count they are.
+	"""
+	from glob import glob 
+
+	# Initialize collection lists
+	pdbs_that_didnt_process = []
+	pdbs_missing_decoys = {}
+
+	# Iterate through decoy name list, checking decoy counts
+	for dec_name in decoy_name_list:
+		# Collet list of all decoys with the given base name
+		decoys = glob(output_file_name(dec_name, path=decoy_dir, 
+			extension='pdb', suffix='*'))
+
+		# If the list is empty, add to the didnt_process list
+		if len(decoys) == 0:
+			pdbs_that_didnt_process.append(dec_name)
+			continue
+
+		# If the list is incomplete, add to the missing_decoys dict
+		if len(decoys) != decoy_count:
+			missing_decs[dec_name] = decoy_count - len(decoys)
+
+
+	return pdbs_that_didnt_process, pdbs_missing_decoys
+
+
+def fix_pdb(pdb, extension=None, clobber=False):
+	"""
+	Cleans up a PDB file, stripping out LINK lines and changing enzdes headers 
+	so that constraints won't crash. Overwrites the original with the cleaned 
+	version. An extension option may be given that will allow for the insertion 
+	of extra residues into a chain. This extension must be in the format of 
+	[chain_modified, modification_start, altered_length], ex ['A', 96, 5]
+	"""
+	# Unzip and open the PDB
+	pdb = find_maybe_compressed_file(pdb, unzip_file=True)
+	with open(pdb, 'r') as r:
+		lines = r.readlines()
+
+	# Collect lists of LINK lines, enzdes header lines, and range of atom lines
+	link_lines = []
+	enzdes_lines = []
+	first_atom = 0
+	last_atom = 0
+	for n, line in enumerate(lines):
+		# Link lines
+		if 'LINK' in line:
+			link_lines.append(n)
+
+		# Enzdes lined
+		if 'REMARK 666' in line:
+			enzdes_lines.append(n)
+
+		# Atom lines range
+		if 'ATOM' in line and first_atom == 0:
+			first_atom = n
+		if 'ATOM' in line and n > last_atom:
+			last_atom = n
+
+	# Remove LINK lines, which interfere with putting in constraints
+	for l2r in link_lines:
+		lines[l2r] = '\n'
+
+	# Fixing enzdes comments block so comments match (mutated) PDB sequence
+	for eline in enzdes_lines:
+		line_text = lines[eline]
+		# Splitting into columns. Columns 4-6 refer to the first residue, and 
+		# columns 9-11 refer to the second residue
+		e_columns = line_text.split()
+
+		# Checking whether enzdes constraint headers match sequence in PDB
+		for e_chain, e_aa, e_res in [e_columns[4:7], e_columns[9:12]]:
+			orig_text = ' '.join([e_chain, e_aa, e_res])
+
+			# Addressing extension
+			if extension:
+				ext_chain, ext_start, ext_len = extension
+				if e_chain == ext_chain and int(e_res) > ext_start:
+					e_res = str(int(e_res) + ext_len)
+					correct_text = ' '.join([e_chain, e_aa, e_res])
+					line_text = line_text.replace(orig_text, correct_text)
+
+			# Looping through all ATOM lines in the PDB until finding the 
+			# right residue, then checking agreement and stopping loop
+			for atom_line in lines[first_atom: last_atom]:
+				# Skip any line that isn't an atom line, such as a TER
+				if ('ATOM' not in atom_line):
+					continue
+
+				# Splitting into columns. Column 4 is the chain, column 5 is 
+				# the residue number, column 3 is the aa name
+				a_columns = atom_line.split()
+				a_aa, a_chain, a_res = a_columns[3:6]
+
+				# Skip until finding the right residue in the right chain
+				if (a_chain != e_chain) or (a_res != e_res):
+					continue
+
+				# If the enzdes header and PDB agree, stop there
+				if e_aa == a_aa:
+					break
+
+				# If the enzdes header and PDB disagree, correct the header
+				else:
+					correct_text = ' '.join([a_chain, a_aa, a_res])
+					line_text = line_text.replace(orig_text, correct_text)
+					break
+
+		# Setting header line with corrected text
+		lines[eline] = line_text
+		
+	# Saving corrected PDB
+	if clobber:
+		with open(pdb, 'w') as w:
+			w.writelines(lines)
+	else:
+		with open(pdb.replace('.pdb', '_corrected.pdb'), 'w') as w:
+			w.writelines(lines)
+
+	return
+
+
+def extract_pdb_atom_lines(pdb, het=False, enzdes=False, 
+	link=False, connect=False):
+	"""
+	Reads a PDB file and extracts the ATOM lines. By default, only ATOM lines 
+	are collected. However, if het is set to True, all HETATM lines will also be
+	collected. If het is a list of strings (case-sensitive), only the HETATM 
+	lines including those residue types will be collected with the ATOM lines.
+	If enzdes is True, REMARK 666 lines will also be collected. If link is True,
+	LINK lines will also be collected. If connect is True, CONNECT lines will 
+	also be collected.
+	"""
+	# Read in the PDB file
+	with open(pdb, 'r') as r:
+		pdb_lines = r.readlines()
+
+	# Go through lines, collecting only the 
+	pdb_extract = []
+	for line in pdb_lines:
+		# Collect ATOM lines
+		if line[:4] == 'ATOM':
+			pdb_extract.append(line)
+			continue
+
+		# Collect HETATM lines
+		if het:
+			if line[:6] == 'HETATM':
+				if not isinstance(het, list):
+					pdb_extract.append(line)
+					continue
+				else:
+					for atype in het:
+						if atype in line:
+							pdb_extract.append(line)
+							break
+
+		# Collect enzdes lines
+		if enzdes:
+			if line[:10] == 'REMARK 666':
+				pdb_extract.append(line)
+				continue
+
+		# Collect LINK lines
+		if link:
+			if line[:4] == 'LINK':
+				pdb_extract.append(line)
+				continue
+
+		# Collect enzdes lines
+		if connect:
+			if line[:6] == 'CONECT':
+				pdb_extract.append(line)
+				continue
+	return pdb_extract
+
+
+def tabulate_pdb_atom_lines(pdb, het=False):
+	"""
+	Generates a pandas dataframe from a PDB's ATOM lines. Can include HETATM as 
+	well.
+	"""
+	import pandas as pd
+
+	# Extract PDB ATOM/HETATM lines
+	atom_lines = extract_pdb_atom_lines(pdb, het=het)
+
+	# Define columns
+	pdb_atom_cols = {'type': (0, 6), 'atom_number': (6, 11), 
+		'atom_name': (12, 16), 'alt_location': (16, 17), 'res_name': (17, 20), 
+		'chain_id': (21,22), 'res_number': (22, 27), 'x': (30, 38), 
+		'y': (38, 46), 'z':(46,54), 'occupancy': (54, 60), 
+		'b-factor': (60, 66), 'segment': (72, 76), 'element': (76, 80)}
+
+	# Create data frame
+	atom_table = pd.DataFrame([])
+	for atom_line in atom_lines:
+		atom_dict = {}
+		for col, ind in pdb_atom_cols.items():
+			atom_dict[col] = atom_line[ind[0]:ind[1]].strip()
+		atom_table = atom_table.append(atom_dict, ignore_index=True)
+
+	# Convert columns from strings to numeric where appropriate
+	for col in ['atom_number', 'res_number']:
+		atom_table[col] = atom_table[col].astype(int, errors='ignore')
+	for col in ['x', 'y', 'z', 'b-factor', 'occupancy']:
+		atom_table[col] = atom_table[col].astype(float)
+
+	return atom_table
+
+
+def get_pdb_sequences(pdb_atom_table):
+	"""
+	Given a PDB atom table from tabulate_pdb_atom_lines, generates a dict of 
+	chains and their sequences
+	"""
+	# Extract CA-only table to read sequence
+	ca_table = pdb_atom_table[pdb_atom_table['atom_name'] == 'CA']
+
+	# Create dict of chains and sequences
+	chains_sequences = {}
+
+	# Iterate through all chains to collect sequences
+	for chain in ca_table['chain_id'].unique():
+		chain_ca_table = ca_table[ca_table['chain_id'] == chain]
+		sequence = ''.join(
+			[convert_aa_name(i) for i in chain_ca_table['res_name']])
+		chains_sequences[chain] = sequence
+	
+	return chains_sequences
+
+
+def find_aa_in_pdb_atom_table(atom_table, chain, pdb_number, aa1=True):
+	"""
+	From a PDB atom table like those generated by tabulate_pdb_atom_lines, find 
+	the amino acid name for the residue of specified chain and number. The aa1 
+	option will control whether the 1-letter (True) or 3-letter (False) name 
+	will be returned.
+	"""
+	# Isolate the CA of the desired residue
+	target_ca = atom_table[(atom_table['atom_name'] == 'CA') & 
+		(atom_table['chain_id'] == chain) & 
+		(atom_table['res_number'] == pdb_number)]
+
+	# Get the residue name
+	res_name = target_ca['res_name'].to_string(index=False).strip()
+
+	# Outpur the residue name in desired form
+	if aa1:
+		return convert_aa_name(res_name)
+	else:
+		return res_name
+
+
+def check_pdb_atom_table_contiguity(atom_table, min_res=1, max_res=0):
+	"""
+	PDB files may include missing residues or insertion residues (such as 
+	antibody CDR loops with redundant numbering). This function checks whether 
+	an atom table made by tabulate_pdb_atom_lines is missing residues or has 
+	insertions. Residues with lettered names (which don't convert to integers) 
+	are identified as insertions. Deletions are identified by finding gaps in a 
+	range, which by default goes from 1 to the max residue number of each chain, 
+	though the bounds can be set manually (min_res, max_res) or automatically 
+	identify the range of the chain (by setting the value to 0). Returns a dict 
+	of dicts. Outer: insertions, deletions; inner: a list for each chain.
+	"""
+	# Extract CA-only table to read sequence
+	ca_table = atom_table[atom_table['atom_name'] == 'CA']
+
+	# Initialize report dict
+	residue_indels = {i:{} for i in ['insertions', 'deletions']}
+
+	# Iterate through all chains to collect indels
+	for chain in ca_table['chain_id'].unique():
+		# Isolate single chain
+		chain_ca_table = ca_table[ca_table['chain_id'] == chain]
+
+		# List all residues
+		res_list = [str2int(i) for i in chain_ca_table['res_number']]
+
+		# Identify insertions
+		insertion_residues = [i for i in res_list if type(i) != int]
+		residue_indels['insertions'][chain] = insertion_residues
+
+		# Finding missing residues
+		res_list = [res for res in res_list if res not in insertion_residues]
+		## Determine chain min residue
+		chain_min = min_res
+		if min_res == 0:
+			chain_min =  min(res_list)
+		## Determine chain max residue
+		chain_max = max_res
+		if max_res == 0:
+			chain_max =  max(res_list)
+		## Check for gaps in residue number list
+		missing_res = [res for res in range(chain_min, chain_max + 1) 
+			if res not in res_list]
+		residue_indels['deletions'][chain] = missing_res
+
+	return residue_indels
+
+
+def atom_table_to_pdb(atom_table, pdb_name):
+	"""
+	Does the reverse operation of tabulate_pdb_atom_lines, converting a PDB atom
+	table back into a PDB with a specified pdb_name.
+	"""
+	# Create PDB line template string
+	pdb_line_string = '{:<6}{:>5} {:^4}{:<1}{:<3} {:<1}{:^5}    '
+	pdb_line_string += '{:<8}{:<8}{:<8}{:^6}{:^6}      {:<4}{:<4}\n'
+
+	# Write formatted lines to the PDB file
+	with open(pdb_name, 'w') as w:
+		for ind, row in atom_table.iterrows():
+			w.write(pdb_line_string.format(*[str(i) for i in list(row)]))
+
+	return
+
+
+def extract_pdb_energy_lines(pdb):
+	"""
+	Finds and returns the lines from a PDB that include the pose energies	
+	"""
+	# Read the PDB
+	with open(pdb, 'r') as r:
+		pdb_lines = r.readlines()
+
+	# Identify endpoints of pose energies table
+	e_table_begin = None
+	e_table_end = None
+	for n, pdb_line in enumerate(pdb_lines):
+		if "BEGIN_POSE_ENERGIES_TABLE" in pdb_line:
+			e_table_begin = n + 1
+		if "END_POSE_ENERGIES_TABLE" in pdb_line:
+			e_table_end = n
+			break
+
+	return pdb_lines[e_table_begin: e_table_end]
+
+
+def tabulate_pdb_energy_lines(pdb):
+	"""
+	Generates a pandas dataframe from a PDB's Rosetta energy lines.
+	"""
+	import pandas as pd
+	import re
+
+	# Extract PDB Rosetta energy lines
+	energy_lines = extract_pdb_energy_lines(pdb)
+
+	# Create table
+	headers = energy_lines.pop(0).strip().split()
+	energy_table = pd.DataFrame(columns=headers)
+
+	# Populate the table converting line strings to series of floats
+	for eline in energy_lines:
+		line_energies = [str2float(i) for i in eline.strip().split()]
+		line_energies = pd. Series(line_energies, index=headers)
+		energy_table = energy_table.append(line_energies, ignore_index=True)
+    
+	# Create residue site and name columns from label
+	energy_table['pose_number'] = energy_table.apply(
+		lambda row: str2int(re.split('\W+|_', row['label'])[-1]), 
+		axis='columns')
+	energy_table['residue'] = energy_table.apply(
+		lambda row: convert_aa_name(re.split('\W+|_', row['label'])[0], 
+		return_orig=True), axis='columns')
+    
+	# Reorder columns
+	cols = ['pose_number', 'residue', 'total']
+	headers.remove('label')
+	headers.remove('total')
+	cols += headers
+	energy_table = energy_table[cols]
+
+	return energy_table
+
+################################################################################
 # Pose setup functions (functions require PyRosetta)
 
 def pyrosetta_init(verbose=False, preserve_header=False, no_link=False, sugars=False, 
@@ -1477,7 +1695,8 @@ def pyrosetta_init(verbose=False, preserve_header=False, no_link=False, sugars=F
 		preserve_header (default=False) will preserve PDB headers if True
 		sugars (default=False) will add a number of flags recommended by Labonte
 		no_link (default=False) will prevent adding LINK lines to output PDBs
-		ligands (default=None) will add a list of extra_res_fa params files
+		ligands (default=None) will add a single string or list of extra_res_fa 
+			params files 
 		extra_opts (default=None) will add a list of other arguments given as 
 			strings. Do not include dashes; they will be added automatically.
 		init (default=True) will initialize PyRosetta with the given options.
@@ -1504,6 +1723,8 @@ def pyrosetta_init(verbose=False, preserve_header=False, no_link=False, sugars=F
 	if isinstance(ligands, list):
 		for l in ligands:
 			ros_opts.append('extra_res_fa {}'.format(l))
+	if isinstance(ligands, str):
+		ros_opts.append('extra_res_fa {}'.format(ligands))
 	if extra_opts:
 		for i in extra_opts:
 			ros_opts.append(i)
@@ -1584,6 +1805,16 @@ def load_pose(pdb, path=None, enzdes_cst=None, coord_cst=False, res_type_cst=0,
 	
 	return pose
 
+
+def pose_copy(pose):
+	""" Returns a copy of a pose """
+	import pyrosetta as pr
+
+	copied_pose = pr.Pose()
+	copied_pose.assign(pose)
+
+	return copied_pose
+
 ################################################################################
 # Pose informatics functions (functions require PyRosetta)
 
@@ -1636,6 +1867,23 @@ def get_pose_chain_list(pose):
 	return pose_chains
 
 
+def get_pose_sequence(pose, selection=None):
+	""" 
+	Determine the sequence of a pose. Providing a selector will return only the 
+	sequence of the selection.
+	"""
+	from pyrosetta.rosetta.core.simple_metrics.metrics import SequenceMetric
+
+	# Create sequence metric
+	seqm = SequenceMetric()
+
+	# Add the selector
+	if selection:
+		seqm.set_residue_selector(selection)
+
+	return seqm.calculate(pose)
+
+
 def find_res_aa(pose, residue, name_length=1):
 	"""
 	Find what AA is in a given pose position. By default, gives the 1-letter
@@ -1684,34 +1932,75 @@ def find_dihedral_atom_ids(pose, resnum, dihedral):
 	# Confirm acceptable angle selection
 	assert dihedral in ['phi', 'psi', 'omega']
 
-	# Populate list of relevant backbone atoms near dihedrals
+	# Populate list of relevant backbone atoms near dihedral
 	bb_atomids = []
-	for atom in ['C']:
-		bb_atomids.append(find_atom_id(pose, resnum - 1, atom))
-	for atom in ['N', 'CA', 'C']:
-		bb_atomids.append(find_atom_id(pose, resnum, atom))
-	for atom in ['N', 'CA']:
-		bb_atomids.append(find_atom_id(pose, resnum + 1, atom))
-
-	# Phi angle
+	## Phi angle
 	if dihedral == 'phi':
-		return bb_atomids[:-2]
+		for atom in ['C']:
+			bb_atomids.append(find_atom_id(pose, resnum - 1, atom))
+		for atom in ['N', 'CA', 'C']:
+			bb_atomids.append(find_atom_id(pose, resnum, atom))
 
-	# Psi angle
+	## Psi angle
 	if dihedral == 'psi':
-		return bb_atomids[1:-1]
+		for atom in ['N', 'CA', 'C']:
+			bb_atomids.append(find_atom_id(pose, resnum, atom))
+		for atom in ['N']:
+			bb_atomids.append(find_atom_id(pose, resnum + 1, atom))
 
-	# Omega angle
+	## Omega angle
 	if dihedral == 'omega':
-		return bb_atomids[2:]
+		for atom in ['CA', 'C']:
+			bb_atomids.append(find_atom_id(pose, resnum, atom))
+		for atom in ['N', 'CA']:
+			bb_atomids.append(find_atom_id(pose, resnum + 1, atom))
+
+	return bb_atomids
 
 
 def find_atom_coords(pose, resnum, atom_type='CA'):
 	""" 
 	For a given pose and residue number, returns the coordinates of a 
-	specified atom type 
+	specified atom type as an array
 	"""
-	return pose.residue(resnum).atom(atom_type).xyz()
+	import numpy as np
+	return np.array(pose.residue(resnum).atom(atom_type).xyz())
+
+
+def find_dihedral_atom_coords(pose, resnum, dihedral):
+	"""
+	For a given pose, residue number, and dehedral, returns a list of four 
+	xyz coordinate lists corresponding to the atoms comprising that dihedral.
+
+	Options are phi, psi, and omega
+	"""
+	# Confirm acceptable angle selection
+	assert dihedral in ['phi', 'psi', 'omega']
+
+	# Populate list of relevant backbone atoms near dihedral
+	bb_atomids = []
+	## Phi angle
+	if dihedral == 'phi':
+		for atom in ['C']:
+			bb_atomids.append(find_atom_coords(pose, resnum - 1, atom))
+		for atom in ['N', 'CA', 'C']:
+			bb_atomids.append(find_atom_coords(pose, resnum, atom))
+
+	## Psi angle
+	if dihedral == 'psi':
+		for atom in ['N', 'CA', 'C']:
+			bb_atomids.append(find_atom_coords(pose, resnum, atom))
+		for atom in ['N']:
+			bb_atomids.append(find_atom_coords(pose, resnum + 1, atom))
+
+	## Omega angle
+	if dihedral == 'omega':
+		for atom in ['CA', 'C']:
+			bb_atomids.append(find_atom_coords(pose, resnum, atom))
+		for atom in ['N', 'CA']:
+			bb_atomids.append(find_atom_coords(pose, resnum + 1, atom))
+
+	return bb_atomids
 
 
 def list_pose_coords(pose, atom_type='CA'):
@@ -1887,17 +2176,20 @@ def find_sequence_in_pose_table(pose_table, sequence, instances=0):
 
 	return pose_table.iloc[selected_rows]
 
+
+def set_pose_name(pose, pose_name):
+	"""
+	Set the name of a pose in the PDB info to an input string. Necessary for 
+	outputting multiple poses as silent files. Names are by default the full
+	PDB name, including path, for poses loaded from files, or the first 8 
+	letters of the sequence for poses created from sequences.
+	"""
+	pose.pdb_info().name(pose_name)
+
+	return pose
+
 ################################################################################
 # Pose geometric evaluation functions (functions require PyRosetta)
-
-def get_distance(c1, c2):
-	""" 
-	Returns the distance between two Rosetta XYZ coordinate vectors
-	"""
-	import numpy as np
-
-	return np.linalg.norm(np.array(c1) - np.array(c2))
-
 
 def check_pose_continuity(pose):
 	"""
@@ -1916,7 +2208,7 @@ def check_pose_continuity(pose):
 	c_n_distances = []
 	break_sites = []
 	for i in range(len(n_coords) - 1):
-		distance = get_distance(c_coords[i], n_coords[i+1])
+		distance = calc_distance(c_coords[i], n_coords[i+1])
 		c_n_distances.append(distance)
 
 	# Check whether distance indicates a chain break
@@ -1939,7 +2231,8 @@ def identify_res_layer(pose, res_number, target_chain=None):
 
 	# If the pose has multiple chains and one is desired, isolate it
 	if target_chain:
-		check_pose = Pose(pose, pose.chain_begin(main_chain), pose.chain_end(main_chain))
+		check_pose = Pose(pose, pose.chain_begin(target_chain), 
+            pose.chain_end(target_chain))
 	else:
 		check_pose = pose
 	
@@ -1965,26 +2258,140 @@ def identify_res_layer(pose, res_number, target_chain=None):
 		return 'SURFACE'
 
 
-def rmsd_metric(ref_pose):
+def rmsd_type(r_type='bb_ca'):
 	"""
-	Creates an RMSD metric based on a reference pose
+	By default, RMSDs are calculated for backbone CAs. This function allows
+	for selection of alternative RMSD methods.
+
+	Options:
+		'bb_ca' 		# Default
+		'bb_heavy'
+		'bb'
+		'sc_heavy'
+		'sc'
+		'all_heavy'
+		'all'
+	"""
+	from pyrosetta.rosetta.core.scoring import rmsd_atoms
+
+	# Check correct input
+	rmsd_type_options = ['bb_ca', 'bb_heavy', 'bb', 'sc_heavy', 'sc', 
+		'all_heavy', 'all', None]
+	if r_type not in rmsd_type_options:
+		print("You have entered an invalid RMSD type. Select from:")
+		for rt in rmsd_type_options[:-1]:
+			print('\t--', rt)
+		raise ValueError('Invalid RMSD type')
+
+	# Convert None to default
+	if r_type == None:
+		r_type = 'bb_ca'
+
+	# Get RMSD type
+	rmsd_types = {
+		'bb_ca': rmsd_atoms.rmsd_protein_bb_ca,
+		'bb_heavy': rmsd_atoms.rmsd_protein_bb_heavy,
+		'bb': rmsd_atoms.rmsd_protein_bb_heavy_including_O,
+		'sc_heavy': rmsd_atoms.rmsd_sc_heavy,
+		'sc': rmsd_atoms.rmsd_sc,
+		'all_heavy': rmsd_atoms.rmsd_all_heavy,
+		'all': rmsd_atoms.rmsd_all
+		}
+	return rmsd_types['bb_ca']
+
+
+def rmsd_metric(ref_pose, ref_calc_selection=None, target_calc_selection=None, 
+	ref_align_selection=None, target_align_selection=None, r_type=None):
+	"""
+	Creates an RMSD metric based on a reference pose. 
+
+	Selectors can be provided to align and/or calculate RMSDs based on subsets 
+	of the pose. By default, the calculation will align and evaluate based on 
+	the whole pose (poses must be the same number of residues). Giving selectors 
+	for ref and target calc_selection will result in the RMSD being calculated 
+	only for selected residues. Giving selectors for ref and target 
+	align_selection will result in the poses being aligned based on only 
+	selected residues. Selections must be given in pairs, and selections for ref 
+	and target must include the same number of residues in each selection 
+	category. If calculation selections are given without alignment selections, 
+	alignment will use the calculation selections.
+
+	r_type sets the RMSD calculation type. Options are:
+		'bb_ca'		# Default
+		'bb_heavy'
+		'bb'
+		'sc_heavy'
+		'sc'
+		'all_heavy'
+		'all'
 	"""
 	from pyrosetta.rosetta.core.simple_metrics.metrics import RMSDMetric
+
+	# Confirming paired selector arguments
+	if not any([
+		ref_calc_selection == None and target_calc_selection == None,
+		ref_calc_selection != None and target_calc_selection != None]):
+		raise ValueError("""Reference and taget calculation selections must be 
+			submitted together.""")
+	if not any([
+		ref_align_selection == None and target_align_selection == None,
+		ref_align_selection != None and target_align_selection != None]):
+		raise ValueError("""Reference and taget alignment selections must be 
+			submitted together.""")
+
+	# Set selector defaults
+	if ref_calc_selection == None:
+		ref_calc_selection = full_selector()
+	if target_calc_selection == None:
+		target_calc_selection = full_selector()
+	if ref_align_selection == None:
+		ref_align_selection = ref_calc_selection
+	if target_align_selection == None:
+		target_align_selection = target_calc_selection
 
 	# Create the RMSDMetric with reference pose
 	rmsd_metric = RMSDMetric()
 	rmsd_metric.set_comparison_pose(ref_pose)
+	rmsd_metric.set_rmsd_type(rmsd_type(r_type))
+	rmsd_metric.set_run_superimpose(True)
+	rmsd_metric.set_residue_selector_reference(ref_calc_selection)
+	rmsd_metric.set_residue_selector(target_calc_selection)
+	rmsd_metric.set_residue_selector_super_reference(ref_align_selection)
+	rmsd_metric.set_residue_selector_super(target_align_selection)
 
 	return rmsd_metric
 
 
-def get_rmsd(ref_pose, pose):
+def get_rmsd(ref_pose, pose, 
+	ref_calc_selection=None, target_calc_selection=None, 
+	ref_align_selection=None, target_align_selection=None, r_type=None):
 	"""
 	Given two poses of equal size, determines RMSD. The first pose is the 
-	one to which the second is compared.
+	one to which the second is compared. 
+
+	Selectors can be provided to align and/or calculate RMSDs based on subsets 
+	of the pose. By default, the calculation will align and evaluate based on 
+	the whole pose (poses must be the same number of residues). Giving selectors 
+	for ref and target calc_selection will result in the RMSD being calculated 
+	only for selected residues. Giving selectors for ref and target 
+	align_selection will result in the poses being aligned based on only 
+	selected residues. Selections must be given in pairs, and selections for ref 
+	and target must include the same number of residues in each selection 
+	category. If calculation selections are given without alignment selections, 
+	alignment will use the calculation selections.
+
+	r_type sets the RMSD calculation type. Options are:
+		'bb_ca'		# Default
+		'bb_heavy'
+		'bb'
+		'sc_heavy'
+		'sc'
+		'all_heavy'
+		'all'
 	"""
 	# Create the RMSDMetric, setting pose_1 as the reference
-	rmet = rmsd_metric(ref_pose)
+	rmet = rmsd_metric(ref_pose, ref_calc_selection, target_calc_selection, 
+	ref_align_selection, target_align_selection, r_type)
 
 	# Use the RMSDMetirc to calculate the RMSD of pose_2
 	rmsd = rmet.calculate(pose)
@@ -2157,7 +2564,7 @@ def index_selector(indices):
 		return ResidueIndexSelector(str(indices))
 
 	if type(indices) in [list, range]:
-		ind_str = ','.join([str(i) for i in indices])
+		ind_str = join_list(indices, ',')
 		return ResidueIndexSelector(ind_str)
 
 
@@ -2369,6 +2776,7 @@ def secstruct_selector(ss, minE=3, minH=4):
 		SecondaryStructureSelector
 
 	# Check correct input
+	ss = ss.upper()
 	for ss_type in ss:
 		if ss_type not in ['E', 'H', 'L']:
 			raise ValueError('{} is not a secondary structure. Secondary \
@@ -2401,7 +2809,7 @@ def layer_selector(layer):
 	layer = layer.upper()
 
 	# Create selector
-	layer_selector = LayerSelector()
+	layr_selector = LayerSelector()
 
 	# Determine layer(s) to select
 	select_core = 0
@@ -2412,9 +2820,9 @@ def layer_selector(layer):
 	if 'S' in layer: select_surface = 1
 
 	# Set layer selection
-	layer_selector.set_layers(select_core, select_boundary, select_surface)
+	layr_selector.set_layers(select_core, select_boundary, select_surface)
 
-	return layer_selector
+	return layr_selector
 
 
 def hbond_selector(selection, include_sc=True, include_bb_bb=True):
@@ -2432,22 +2840,21 @@ def hbond_selector(selection, include_sc=True, include_bb_bb=True):
 	# Initialize selector
 	hbs = HBondSelector()
 	hbs.set_input_set_selector(selection)
-	hbs.set_include_bb_bb(False)
 
 	# Include both
 	if include_sc & include_bb_bb:
-		hbs.set_include_bb_bb(True)
 		return hbs
 
 	# Exclude bb-bb bonding residues
 	elif include_sc:
+		hbs.set_include_bb_bb(False)
 		return hbs
 
 	# Select only bb-bb residues
 	elif include_bb_bb:
 		# Since selector doesn't allow bb-only, subtract two selectors
-		hb_with_bb = hbs.clone()
-		hb_with_bb.set_include_bb_bb(True)
+		hb_with_bb = HBondSelector()
+		hb_with_bb.set_input_set_selector(selection)
 		no_sc = not_selector(hbs)
 		return selector_intersection(hb_with_bb, no_sc)
 
@@ -2464,7 +2871,10 @@ def not_selector(selection):
 	from pyrosetta.rosetta.core.select.residue_selector import \
 		NotResidueSelector
 
-	return NotResidueSelector(selection)
+	nrs = NotResidueSelector()
+	nrs.set_residue_selector(selection)
+
+	return nrs
 
 
 def selector_intersection(*selectors):
@@ -2511,9 +2921,9 @@ def selector_to_list(pose, selector, pose_numbering=True):
 	if sel_res_str == '':
 		return []
 	else:
-		selected_residues_list = [str2int(i) for i in sel_res_str.split(',')]
+		selected_residues_list = sel_res_str.split(',')
 		if pose_numbering:
-			return selected_residues_list
+			return [str2int(i) for i in selected_residues_list]
 		else:
 			return [split_string_at_numbers(i) for i in selected_residues_list]
 
@@ -2535,7 +2945,6 @@ def selector_to_pymol(pose, selector, selection_name):
 	pymol_command = pymol_command.replace('rosetta_sele', selection_name)
 
 	return pymol_command
-
 
 ################################################################################
 # Scoring functions (functions require PyRosetta)
@@ -2863,9 +3272,9 @@ def apply_distance_constraints(pose, residue_1, atom_1, residue_2, atom_2,
 	Adds specified distance constraints to a pose. Uses a harmonic constraint 
 	function with a specifiable standard deviation. Input a pose and two residue 
 	numbers with the correspondig atoms for each residue. If distance is set to 
-	0, will use the current distance.
+	0, 'current', or 'c', will use the current distance.
 
-	The pose is modified and the function has an empty return.
+	The function returns the constrained pose.
 
 	Example:
 	apply_distance_constraints(pose, 10, 'CA', 20, 'CA', 5, 0.5)
@@ -2874,12 +3283,12 @@ def apply_distance_constraints(pose, residue_1, atom_1, residue_2, atom_2,
 	from pyrosetta.rosetta.core.scoring.func import HarmonicFunc
 
 	# Determine atoms to constrain
-	a1 = find_res_atom(pose, residue_1, atom_type=atom_1)
-	a2 = find_res_atom(pose, residue_2, atom_type=atom_2)
+	a1 = find_atom_id(pose, residue_1, atom_type=atom_1)
+	a2 = find_atom_id(pose, residue_2, atom_type=atom_2)
 
 	# Adjust distance if current distance is desired
-	if distance == 0:
-		distance = get_distance(a1, a2)
+	if str(distance).lower() in ['0', 'c', 'current']:
+		distance = calc_distance(a1, a2)
 
 	# Create harmonic score function with specified distance and sd
 	harm_func = HarmonicFunc(distance, sd)
@@ -2890,21 +3299,112 @@ def apply_distance_constraints(pose, residue_1, atom_1, residue_2, atom_2,
 	# Add the constraint to the pose
 	pose.add_constraint(distance_constraint)
 
-	return
+	return pose
 
 
-def apply_dihedral_constraint(pose, residue, dihedral, angle, sd=5):
+def apply_angle_constraint(pose, residue_1, atom_1, residue_2, atom_2, 
+	residue_3, atom_3, angle, sd=5):
+	"""
+	This function allows for the addition of an angle constraint to a pose. 
+	Uses a circular harmonic constraint function with a specifiable 
+	standard deviation (default 5). 
+
+	Specify the pose and three residue-atom pairs within the pose 
+	(pose numbering, not PDB), and the desired angle (in degrees, not radians). 
+	Setting angle to 'current' or 'c' will use the existing angle.
+	If a looser or tighter constraint is desired, alter the sd of the 
+	harmonic function. 
+
+	The function returns the constrained pose.
+	"""
+	from math import radians
+	from pyrosetta.rosetta.core.scoring.constraints import DihedralConstraint
+	from pyrosetta.rosetta.core.scoring.func import AngleConstraint
+
+	# Determine angle if using current
+	if angle.lower() in ['c', 'current']:
+		atom_coords = []
+		atom_coords.append(find_atom_coords(pose, residue_1, atom_1))
+		atom_coords.append(find_atom_coords(pose, residue_2, atom_2))
+		atom_coords.append(find_atom_coords(pose, residue_3, atom_3))
+		angle = calc_angle(*atom_coords)
+
+	# Create circular harmonic score function with specified angle and sd
+	circ_harm_func = CircularHarmonicFunc(radians(angle), radians(sd))
+
+	# Determine appropriate atom IDs
+	angle_atom_ids = []
+	angle_atom_ids.append(find_atom_id(pose, residue_1, atom_1))
+	angle_atom_ids.append(find_atom_id(pose, residue_2, atom_2))
+	angle_atom_ids.append(find_atom_id(pose, residue_3, atom_3))
+
+	# Create the constraint
+	angle_constraint = AngleConstraint(*angle_atom_ids, circ_harm_func)
+
+	# Add the constraint to the pose
+	pose.add_constraint(angle_constraint)
+
+	return pose
+
+
+def apply_dihedral_constraint(pose, residue_1, atom_1, residue_2, atom_2,
+	residue_3, atom_3, residue_4, atom_4, angle, sd=5):
 	"""
 	This function allows for the addition of a specified dihedral constraint to
 	a pose. Uses a circular harmonic constraint function with a specifiable 
 	standard deviation (default 5). 
+
+	Specify the pose and four residue-atom pairs within the pose (pose 
+	numbering, not PDB) and the desired angle (in degrees, not radians). Setting 
+	the angle to 'current' or 'c' will use the existing angle. If a looser or 
+	tighter constraint is desired, alter the sd of the harmonic function. 
+
+	The function returns the constrained pose.
+	"""
+	from math import radians
+	from pyrosetta.rosetta.core.scoring.constraints import DihedralConstraint
+	from pyrosetta.rosetta.core.scoring.func import CircularHarmonicFunc
+
+	# Determine angle if using current
+	if angle.lower() in ['c', 'current']:
+		atom_coords = []
+		atom_coords.append(find_atom_coords(pose, residue_1, atom_1))
+		atom_coords.append(find_atom_coords(pose, residue_2, atom_2))
+		atom_coords.append(find_atom_coords(pose, residue_3, atom_3))
+		atom_coords.append(find_atom_coords(pose, residue_4, atom_4))
+		angle = calc_dihedral(*atom_coords)
+
+	# Create circular harmonic score function with specified angle and sd
+	circ_harm_func = CircularHarmonicFunc(radians(angle), radians(sd))
+
+	# Determine appropriate atom IDs
+	dihedral_atom_ids = []
+	dihedral_atom_ids.append(find_atom_id(pose, residue_1, atom_1))
+	dihedral_atom_ids.append(find_atom_id(pose, residue_2, atom_2))
+	dihedral_atom_ids.append(find_atom_id(pose, residue_3, atom_3))
+	dihedral_atom_ids.append(find_atom_id(pose, residue_4, atom_4))
+
+	# Create the constraint
+	dihedral_constraint = DihedralConstraint(*dihedral_atom_ids, circ_harm_func)
+
+	# Add the constraint to the pose
+	pose.add_constraint(dihedral_constraint)
+	return pose
+
+
+def apply_bb_constraint(pose, residue, dihedral, angle, sd=5):
+	"""
+	This function allows for the addition of a phi/psi/omega dihedral constraint 
+	to a pose, giving only a residue and dihedral name as inputs. Uses a 
+	circular harmonic constraint function with a specifiable standard deviation 
+	(default 5). 
 
 	Specify the pose, which residue within the pose (pose numbering, not PDB), 
 	which dihedral to set ('phi', 'psi', or 'omega'), and the desired angle (in 
 	degrees, not radians). If a looser or tighter constraint is desired, alter 
 	the sd of the harmonic function. 
 
-	The pose is modified and the function has an empty return.
+	The function returns the constrained pose.
 	"""
 	from math import radians
 	from pyrosetta.rosetta.core.scoring.constraints import DihedralConstraint
@@ -2922,7 +3422,7 @@ def apply_dihedral_constraint(pose, residue, dihedral, angle, sd=5):
 	# Add the constraint to the pose
 	pose.add_constraint(dihedral_constraint)
 
-	return
+	return pose
 
 
 def constrain_current_backbone_dihedrals(pose, selection, sd=5):
@@ -2941,13 +3441,13 @@ def constrain_current_backbone_dihedrals(pose, selection, sd=5):
 	for res in residues_to_constrain:
 		# Phi angle
 		current_phi = pose.phi(res)
-		apply_dihedral_constraint(pose, res, 'phi', current_phi, sd=sd)
+		apply_bb_constraint(pose, res, 'phi', current_phi, sd=sd)
 
 		# Psi angle
 		current_psi = pose.psi(res)
-		apply_dihedral_constraint(pose, res, 'psi', current_psi, sd=sd)
+		apply_bb_constraint(pose, res, 'psi', current_psi, sd=sd)
 
-	return
+	return pose
 
 ################################################################################
 # Mover functions (functions require PyRosetta)

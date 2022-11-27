@@ -9,10 +9,20 @@ def parse_args():
 	parser.add_argument("-od", "--out_dir", type=str)
 	parser.add_argument("-n", "--number_decoys", required=True, type=int)
 	parser.add_argument("-v", "--variant", default='om', choices=[
-		'de', 's6p', 'om', 'osu'])
+		'de', 's6p', 'om', 'osu', 'ba2', 'ba_2_12', 'ba4', 'new'])
+	parser.add_argument("-f", "--fasta_file", type=str, help="If modeling a \
+		new variant, provide a fasta file with a single RBD sequence.")
 	parser.add_argument("-m", "--apply_mutations", action="store_true")
 	parser.add_argument("-cst", "--apply_constraints", action="store_true")
 	args = parser.parse_args()
+
+	if args.variant == 'new' and not args.fasta_file:
+		raise argparse.ArgumentTypeError('If modeling a new variant, provide \
+			a fasta file with a single RBD sequence.')
+	if args.variant != 'new' and args.fasta_file:
+		raise argparse.ArgumentTypeError('If modeling an existing variant, no \
+			fasta file will be used for model generation.')
+
 	return args
 
 
@@ -61,16 +71,29 @@ class rbd_seqs():
 
 		self.s6p = {417: 'N', 484: 'K', 501: 'Y'}
 
-		self.omicron = {339:'D', 371:'L', 373:'P', 375:'F', 417:'N', 440:'K',  
-			446: 'S', 477: 'N', 478: 'K', 484: 'A', 493: 'R', 496: 'S', 
-			498: 'R', 501: 'Y', 505: 'H'}
-
-		self.osu_omicron = {339:'D', 346: 'K', 371:'L', 373:'P', 375:'F', 
-			417:'N', 440:'K', 446: 'S', 477: 'N', 478: 'K', 484: 'A', 493: 'R', 
+		self.omicron = {339: 'D', 371: 'L', 373: 'P', 375: 'F', 417: 'N', 
+			440: 'K',  446: 'S', 477: 'N', 478: 'K', 484: 'A', 493: 'R', 
 			496: 'S', 498: 'R', 501: 'Y', 505: 'H'}
 
+		self.osu_omicron = {339: 'D', 346: 'K', 371: 'L', 373: 'P', 375: 'F', 
+			417: 'N', 440: 'K', 446: 'S', 477: 'N', 478: 'K', 484: 'A', 
+			493: 'R', 496: 'S', 498: 'R', 501: 'Y', 505: 'H'}
+
+		self.omicron_ba2 = {339: 'D', 371: 'F', 373: 'P', 375: 'F', 376: 'A', 
+			405: 'N', 408: 'S', 417: 'N', 440: 'K', 477: 'N', 478: 'K', 
+			484: 'A', 493: 'R', 498: 'R', 501: 'Y', 505: 'H'}
+
+		self.ba_2_12 = {339: 'D', 371: 'F', 373: 'P', 375: 'F', 376: 'A', 
+			405: 'N', 408: 'S', 417: 'N', 440: 'K', 452: 'Q', 477: 'N', 
+			478: 'K', 484: 'A', 493: 'R', 498: 'R', 501: 'Y', 505: 'H'}
+
+		self.ba_4 = {339: 'D', 371: 'F', 373: 'P', 375: 'F', 376: 'A', 
+			405: 'N', 408: 'S', 417: 'N', 440: 'K', 452: 'R', 477: 'N', 
+			478: 'K', 484: 'A', 486: 'V', 498: 'R', 501: 'Y', 505: 'H'}
+
 	def get_variant(self, variant, mutated=True):
-		available_variants = ['de', 's6p', 'om', 'osu']
+		available_variants = ['de', 's6p', 'om', 'osu', 'ba2', 'ba_2_12', 'ba4', 
+			'new']
 		variant = variant.lower()
 		if variant not in available_variants:
 			raise ValueError(
@@ -84,20 +107,50 @@ class rbd_seqs():
 			variant_dict = self.omicron
 		if variant == 'osu':
 			variant_dict = self.osu_omicron
+		if variant == 'ba2':
+			variant_dict = self.omicron_ba2
+		if variant == 'ba_2_12':
+			variant_dict = self.ba_2_12
+		if variant == 'ba4':
+			variant_dict = self.ba_4
+		if variant == 'new':
+			variant_dict = self.new_variant
 
 		if mutated:
 			return variant_dict
 		else: 
 			return {k: v for k, v in self.wt.items() if k in variant_dict}
 
+	def add_new_variant(self, fasta_file):
+		# Read in fasta sequence
+		new_variant_sequence = ut.parse_fastafile(fasta_file)
+		if len(new_variant_sequence) > 1:
+			raise RuntimeError("""Fastsa file includes multiple sequences. Use a
+				single-sequence fasta file input.""")
+		new_variant_sequence = new_variant_sequence[0]
+
+		# Align sequence with WT and confirm equal sequence length
+		ref_seq = ut.join_list(self.wt.values(), '')
+		alignment = ut.global_align(ref_seq, new_variant_sequence.seq)[0]
+		alignment_table = ut.tabulate_sequence_alignment(alignment)
+		if len(alignment_table[alignment_table['aligned'] == 0]) > 0:
+			raise RuntimeError("""Sequence includes insertions and/or deletions. 
+				This method is only suitable for modeling sequences of equal 
+				length.""")
+
+		# Renumber alignment table and make a dict of substitutions
+		alignment_table['s1_position'] = alignment_table['s1_position'] + 318
+		mut_dict = {}
+		for i, r in alignment_table[alignment_table['identity'] == 0].iterrows():
+			mut_dict[r['s1_position']] = r['s2_sequence']
+
+		# Add new variant sequences dict
+		self.new_variant = mut_dict
 
 
-def convert_variant_subs(ptab, rbd_chain='A', variant='om', mutate=True):
-	rbd_sequence = rbd_seqs().get_variant(variant, mutate)
-
+def convert_variant_subs(ptab, sequence_changes, rbd_chain='A'):
 	site_changes = {}
-
-	for pdb_num, aa in rbd_sequence.items():
+	for pdb_num, aa in sequence_changes.items():
 		# Identify table row with given PDB number in RBD (chain A)
 		row_with_pdb_num = ptab[(ptab['pdb_chain'] == rbd_chain) & 
 			(ptab['pdb_number'] == pdb_num)]
@@ -114,7 +167,7 @@ def convert_variant_subs(ptab, rbd_chain='A', variant='om', mutate=True):
 
 
 def main(args):
-	print('pdb:', args.start_model)
+	print('\npdb:\n', args.start_model, '\n')
 	# Loading pose and tabulating
 	if args.apply_constraints:
 		pose = ut.load_pose(args.start_model, coord_cst=True)
@@ -122,24 +175,30 @@ def main(args):
 		pose = ut.load_pose(args.start_model)
 	ptab = ut.tabulate_pose_residues(pose)
 
+	# Get sequence changes
+	rbd_seq_obj = rbd_seqs()
+	if args.variant == 'new':
+		rbd_seq_obj.add_new_variant(args.fasta_file)
+	seq_changes = rbd_seq_obj.get_variant(args.variant, args.apply_mutations)
+
 	# Convert substitutions dict to pose numbers for this PDB
 	# Handles multi-chain models
 	substitutions_dict = {}
 	antigen_chain_selections = []
 	for chain in ['A', 'B']:
 		if chain in list(ptab['pdb_chain']):
-			substitutions_dict.update(convert_variant_subs(ptab, chain, 
-				args.variant, args.apply_mutations))
+			substitutions_dict.update(convert_variant_subs(ptab, seq_changes, 
+				chain))
 			antigen_chain_selections.append(ut.chain_selector(chain))
-	print('substitutions_dict:', substitutions_dict)
+	print('substitutions_dict:', substitutions_dict, '\n')
 
 	# Make residue selections
 	mutation_sites = ut.index_selector(list(substitutions_dict.keys()))
 	mutation_shell = ut.close_interface_with_selection_selector(mutation_sites)
 	antigen_chains = ut.selector_union(*antigen_chain_selections)
-	print('mutation_sites:\n', ut.selector_to_list(pose, mutation_sites, False))
-	print('mutation_shell:\n', ut.selector_to_list(pose, mutation_shell, False))
-	print('antigen_chains:\n', ut.selector_to_list(pose, antigen_chains, False))
+	print('mutation_sites:\n', ut.selector_to_list(pose, mutation_sites, False), '\n')
+	print('mutation_shell:\n', ut.selector_to_list(pose, mutation_shell, False), '\n')
+	print('antigen_chains:\n', ut.selector_to_list(pose, antigen_chains, False), '\n')
 
 	# Set up FastRelax with score function and task factory
 	## Score function
@@ -169,7 +228,7 @@ def main(args):
 			ut.not_selector(antigen_chains))
 		jd.additional_decoy_info = ddg
 		current_decoy += 1
-		jd.output_decoy(pp)
+		jd.output_decoy(pp) 
 
 
 if __name__ == '__main__':
