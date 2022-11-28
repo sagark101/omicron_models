@@ -1,4 +1,4 @@
-ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If Cocktail),Complex Name,Resolution,Title,Released,DOI,Notes
+ID,Class of Spike-Binding Protein,Spike-Binding Protein,Barnes Class,Chains (If Combination),Complex Name,Resolution,Title,Released,DOI,Notes
 6W41,Antibody,CR3022,4,,6W41_1,3.084,Crystal structure of SARS-CoV-2 receptor binding domain in complex with human antibody CR3022,3/25/2020,10.1126/science.abb7269,
 6WPS,Antibody,S309,3,,6WPS_1;6WPS_2;6WPS_3,"3.1, 3.1",Structure of the SARS-CoV-2 spike glycoprotein in complex with the S309 neutralizing antibody Fab fragment,5/27/2020,10.1038/s41586-020-2349-y,
 6WPT,Antibody,S309,3,,6WPT_1;6WPT_2,"3.7, 3.7",Structure of the SARS-CoV-2 spike glycoprotein in complex with the S309 neutralizing antibody Fab fragment (open state),5/27/2020,10.1038/s41586-020-2349-y,
